@@ -43,14 +43,12 @@ def getPagesNumber(filename):
 
     return file_reader.numPages;
 
-def parsePDF(filename):
+def generateCSV(filename):
     """
-    Read PDF file and then create a CSV equivalent
+    Read PDF files and then create a CSV equivalent.
     Arguments:
         filename -- PDF to read without .pdf extension
     """
-    print(f'Parsing file... {filename}')
-
     # Get path and number of pages
     n_pages = getPagesNumber(filename)
     file_path = f'api_covid19/files/{filename}.pdf'
@@ -74,6 +72,7 @@ def parsePDF(filename):
     # Finally remove intermediate CSV files
     for f in all_filenames:
         os.remove(f)
+
 
 def getPDFLinks():
     """
@@ -102,13 +101,12 @@ def run():
     report_date = re.findall('[0-9]*\.[0-9]*\.[0-9]*', pdf_links['confirmed_cases'])[0]
 
     # Documents filenames
-    confirmed_cases_filename = f'{report_date}_confirmed_cases'
-    suspected_cases_filename = f'{report_date}_suspected_cases'
+    cc_filename = f'{report_date}_confirmed_cases' # Confirmed cases filename
+    sc_filename = f'{report_date}_suspected_cases' # Suspected cases filename
 
-    downloadPDF(url=pdf_links['confirmed_cases'],
-                filename=confirmed_cases_filename)
-    parsePDF(confirmed_cases_filename)
+    # Download PDFs
+    downloadPDF(url=pdf_links['confirmed_cases'], filename=cc_filename)
+    downloadPDF(url=pdf_links['suspected_cases'], filename=sc_filename)
 
-    downloadPDF(url=pdf_links['suspected_cases'],
-                filename=suspected_cases_filename)
-    parsePDF(suspected_cases_filename)
+    generateCSV(cc_filename)
+    generateCSV(sc_filename)
