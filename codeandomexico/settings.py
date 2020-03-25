@@ -82,6 +82,16 @@ DATABASES = {
     }
 }
 
+# Django Celery
+# https://pypi.org/project/django-celery/
+
+CELERY_BROKER_URL = os.environ.get('CLOUDAMQP_URL')
+CELERY_IMPORTS = ('api_covid19.tasks',)
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = "America/Mexico_City"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
