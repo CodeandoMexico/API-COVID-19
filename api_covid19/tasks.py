@@ -15,7 +15,7 @@ from celery.decorators import periodic_task
 from .models import *
 from .scripts.fetch_data import run
 
-@periodic_task(run_every=(crontab(hour=2)), name="update_info: Scrap https://www.gob.mx/ website every 2 hrs")
+@periodic_task(run_every=(crontab(minute=0, hour='*/2')), name="update_info: Scrap https://www.gob.mx/ website every 2 hrs")
 def update_info():
     """
     This is a real world task.
