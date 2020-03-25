@@ -1,0 +1,36 @@
+version: '3'
+services:
+  ###
+  # services
+  ###
+  web:
+    build: .
+    network_mode: host
+    command: gunicorn codeandomexico.wsgi --log-file -
+    volumes:
+        - .:/app
+    ports:
+        - "8000:8000"
+    tty: true
+    env_file:
+      - ./.env
+    stdin_open: true
+
+  worker:
+      build: .
+      depends_on:
+        - rabbitmq
+      network_mode: host
+      command:  celery worker -A codeandomexico -B --loglevel=INFO
+      env_file:
+        - ./.env
+      volumes:
+        - .:/app
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    network_mode: host
