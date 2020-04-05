@@ -26,6 +26,8 @@ Este proyecto es una plantilla para crear proyectos en Codeando México. Puedes 
 - [x] Etiquetas en el about del proyecto.
 - [x] Template para HACKLOG.md
 - [x] Archivo LICENCE con licencia MIT.
+- [x] Proyecto Django para publicar front.
+- [x] Primera gráfica básica con HighCharts (nombre de archivo estático, debe hacerse dinámico).
 - [ ] Plantilla para guía de contribución
 - [ ] Plantilla de *issues*.
 - [ ] Más badges!

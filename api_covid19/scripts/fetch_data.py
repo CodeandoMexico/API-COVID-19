@@ -1,6 +1,6 @@
 import PyPDF2
 import requests
-import camelot
+import camelot.io as camelot
 import pandas as pd
 import glob
 import json
@@ -96,6 +96,7 @@ def getPDFLinks():
     return links
 
 def run():
+    print("Iniciando")
     pdf_links = getPDFLinks()
      # Extract date from document URL
     report_date = re.findall('[0-9]*\.[0-9]*\.[0-9]*', pdf_links['confirmed_cases'])[0]
@@ -110,3 +111,6 @@ def run():
 
     generateCSV(cc_filename)
     generateCSV(sc_filename)
+
+if __name__ == '__main__':
+    run()
