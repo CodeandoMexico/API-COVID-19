@@ -28,9 +28,20 @@ tooltip: {
 },
 plotOptions: {
       column: {
-  pointPadding: 0.2,
-  borderWidth: 0
-}
+          pointPadding: 0.2,
+          borderWidth: 0
+        },
+        series: {
+            dataLabels: {
+                enabled: true,
+                align: 'right',
+                color: '#444444',
+                rotation: -90,
+                y: -15
+            },
+            pointPadding: 0.1,
+            groupPadding: 0
+        }
 },
 series: [{
       name: 'Núm. Casos',
