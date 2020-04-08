@@ -4,7 +4,7 @@ import json
 
 def index(request):
     """ view function for sales app """
-    file_name = "2020.04.06_confirmed_cases.csv"
+    file_name = "2020.04.07_confirmed_cases.csv"
     # read data
 
     df = pd.read_csv("api_covid19/files/"+file_name)
