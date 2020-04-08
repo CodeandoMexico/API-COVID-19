@@ -9,7 +9,7 @@ subtitle: {
       text: ''
 },
 xAxis: {
-      categories:_categories,
+      categories: _estados,
       crosshair: true
 },
 yAxis: {
@@ -37,15 +37,14 @@ plotOptions: {
                 align: 'right',
                 color: '#444444',
                 rotation: -90,
-                y: -15
+                y: -14
             },
             pointPadding: 0.1,
             groupPadding: 0
         }
 },
 series: [{
-      name: 'Núm. Casos',
+      name: 'Casos',
       data: _values
-
 }]
 });

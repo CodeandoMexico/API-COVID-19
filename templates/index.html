@@ -31,6 +31,9 @@
 
           	  <!-- Highcharts display -->
 	  <div class="border" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_origen" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_estado_origen" style="min-width: 800px; height: 800px; margin: 0 auto"></div>
 
 <!--          <h2 class="pt-4">Section Details</h2>-->
 <!--
@@ -136,11 +139,20 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
     <script>
-_categories = {{categories|safe}};
+_estados = {{estados|safe}};
 _values = {{values|safe}};
+_procedencia = {{procedencia|safe}};
+_v_procedencia = {{v_procedencia|safe}};
+_values_origen = {{values_origen|safe}};
+_v_estado_origen = {{v_estado_origen|safe}};
+_rango_de_edad = {{rango_de_edad|safe}};
+_v_rango_de_edad = {{v_rango_de_edad|safe}};
     </script>
 
     <script src="/static/charts/por_estado.js"></script>
+    <script src="/static/charts/por_origen.js"></script>
+    <script src="/static/charts/por_estado_origen.js"></script>
+    <script src="/static/charts/por_rango_de_edad.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>

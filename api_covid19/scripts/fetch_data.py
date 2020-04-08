@@ -104,7 +104,7 @@ def run():
     # Documents filenames
     cc_filename = f'{report_date}_confirmed_cases' # Confirmed cases filename
     sc_filename = f'{report_date}_suspected_cases' # Suspected cases filename
-
+    print(pdf_links)
     # Download PDFs
     downloadPDF(url=pdf_links['confirmed_cases'], filename=cc_filename)
     print(cc_filename + ".pdf descargado")
