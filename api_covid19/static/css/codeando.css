@@ -1,0 +1,316 @@
+/*
+ * Custom CodeandoMexico stylesheet
+ * based on bootstrap 4
+ */
+
+/* :root {
+    --green: #00efac;
+    --green-light: #f8fefe;
+    --purple: #7754e2;
+    --purple-hover: #6439bc;
+    --purple-dark: #2b283b;
+    --purple-light: #f7f6fc;
+    --purple-light-hover: #eceaf2;
+ } */
+
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    color: #4e5162;
+    overflow-x: hidden;
+    position: relative;
+}
+h1,h2,h3,h4,h5,h6 {
+    font-family: 'Encode Sans Expanded', sans-serif;
+    font-weight: 700;
+}
+a {
+    color: #7754e2;
+}
+a:hover,
+.btn-link:hover {
+   color: #6439bc;
+}
+footer {
+    color: #666;
+    font-size: 14px;
+    line-height: 14px;
+}
+footer a,
+footer .btn-link {
+    color: #333;
+    border-width: 0;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 16px;
+    margin: 0 5px;
+    padding: 5px;
+}
+footer .btn-link {
+    margin-top: -4px;
+}
+
+footer a i {
+    font-size: 24px;
+}
+
+.mc-field-group {
+    margin-top: 38px;
+    display: flex;
+    flex-direction: column;
+}
+    .mc-field-group .inpt {
+        border-radius: 5px;
+        border: 1px solid #fff;
+        color: #2b283b;
+        flex: 1;
+        padding: 10px 20px;
+        margin: 0 0 10px 0;
+    }
+    .mc-field-group .inpt:focus {outline: none;}
+    .mc-field-group .btn {
+        padding: 10px 40px;
+    }
+    @media (min-width: 576px) {
+        .mc-field-group {
+            flex-direction: row;
+        }
+        .mc-field-group .inpt {
+            margin: 0 10px 0 0;
+        }
+    }
+
+.font-green {
+    color: #00efac;
+}
+.font-white {
+    color: #fff;
+}
+.font-white-opacity {
+    color: #fff;
+    opacity: .5;
+}
+.font-purple-light {
+    color: #f7f6fc;
+}
+.font-purple {
+    color: #7754e2;
+}
+.font-purple-dark {
+    color: #2b283b;
+}
+
+
+.bg-purple-dark {
+    background-color: #2b283b;
+}
+.bg-purple-light {
+    background-color: #f7f6fc;
+}
+.bg-inicio {
+    width: 100%;
+}
+.inicio {
+    min-height: 70vh;
+}
+    @media (min-width: 576px) {
+        .bg-inicio {
+            background-image: url('../img/bg-inicio.png');
+            background-position: center 93%;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: contain;
+            height: 93vh;
+        }
+        .inicio {
+            min-height: 60vh;
+        }
+    }
+.bg-comunidad {
+    background-position: center bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 50%;
+    position: absolute;
+    height: 100%;
+    display: block;
+}
+@media (min-width: 768px) {
+    .bg-comunidad {
+        background-image: url('../img/bg-comunidad.jpg');
+    }
+}
+.bg-left {
+    left: 0;
+}
+.bg-right {
+    right: 0;
+}
+.container-comunidad {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+
+
+.bt-green {
+    border-top: 4px solid #00efac;
+}
+.bb-green {
+    border-bottom: 4px solid #00efac;
+}
+
+
+.btn-purple {
+    background-color: #7754e2;
+    border-bottom: 3px solid #6439bc;
+    box-shadow: inset 0 2px 0px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.4);
+    color: #fff;
+    font-weight: bold;
+}
+.btn-purple:hover,
+.btn-purple:focus {
+    background-color: #6439bc;
+    box-shadow: inset 0 2px 0px rgba(255,255,255,0), 0 2px 2px rgba(0,0,0,0);
+    color: #fff;
+}
+
+.btn-purple-light {
+    background-color: #f7f6fc;
+    border: 1px solid #eceaf2;
+    box-shadow: inset 0 1px 0px rgba(255,255,255,1), 0 2px 3px rgba(0,0,0,0.1);
+    color: #7754e2;
+    font-weight: bold;
+}
+.btn-purple-light:hover,
+.btn-purple-light:focus {
+    background-color: #eceaf2;
+    box-shadow: inset 0 -1px 0px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0);
+    color: #7754e2;
+}
+
+.navbar {
+  padding: 0;
+  margin: 0 -5px;
+}
+.navbar-padding {
+  padding-top: 100px;
+}
+.nav-padding {
+  padding-top: 15px;
+}
+
+
+.modal-content {
+    background-color: #2b283b;
+    color: #fff;
+}
+    .close {
+        color: #fff;
+        text-shadow: 0 1px 0 #000;
+    }
+    .close:not(:disabled):not(.disabled):focus,
+    .close:not(:disabled):not(.disabled):hover {
+        color: #fff;
+        opacity: 1;
+        outline: none;
+    }
+    .modal-header {
+        border: none;
+        padding: 2rem 3rem 0;
+    }
+    .modal-body {
+        border: none;
+        font-size: 18px;
+        line-height: 26px;
+        padding: 3rem;
+        text-align: center;
+    }
+        .modal-body a {
+            color: rgba(255,255,255,0.6);
+            display: inline-block;
+            margin: 0 5px;
+            padding: 5px;
+        }
+        .modal-body a:hover {
+            color: rgba(255,255,255,1);
+        }
+
+
+.codeandomexico {
+  height: 50px;
+}
+
+
+.box-img-colab {
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    margin: 10px 0;
+}
+.img-colab {
+    max-width: 100%;
+}
+.img-colab-instituciones {
+    width: 160px;
+    margin-bottom: 5px;
+}
+.img-colab-empresas {
+    width: 160px;
+}
+.img-colab-ongs {
+    width: 80px;
+    margin-bottom: 5px;
+}
+
+
+.list-colab {
+    background-color: #f8fefe;
+    list-style: none;
+    margin: 0;
+    padding: 15px;
+}
+    .list-colab li {
+        padding: 15px 0;
+    }
+    .list-colab li::before {
+        content: "< ";
+        color: #7754e2;
+    }
+    .list-colab li::after {
+        content: " />";
+        color: #7754e2;
+    }
+
+
+.project-card {
+    border: 1px solid #eceaf2;
+    border-radius: 5px;
+}
+    .project-image {
+        background: #f7f6fc;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+        color: #7754e2;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .project-image img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+    .project-detail {
+        font-size: 14px;
+        padding: 25px;
+    }
+    .project-detail h6 {
+        height: 40px;
+    }
+    .project-detail p {
+        height: 140px;
+        overflow: hidden;
+    }

@@ -4,6 +4,7 @@ import json
 
 def index(request):
     """ view function for sales app """
+    dt = "7 de abril de 2020"
     file_name = "2020.04.07_confirmed_cases.csv"
     # read data
 
@@ -63,7 +64,7 @@ def index(request):
     values_origen = [{'name': 'Casos por origen', 'data': values}]
     context = {"estados": estados, "procedencia": procedencia, "v_procedencia": v_procedencia,
                'values': values, 'values_origen': values_origen, 'v_estado_origen' : v_estado_origen,
-               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name}
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
     return render(request, 'index.html', context=context)
 
 
