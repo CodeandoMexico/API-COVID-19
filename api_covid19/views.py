@@ -4,6 +4,45 @@ import json
 
 def index(request):
     """ view function for sales app """
+    dt = "8 de abril de 2020"
+    file_name = "2020.04.08_confirmed_cases.csv"
+    # read data
+
+    df = pd.read_csv("api_covid19/files/"+file_name)
+    rs = df.groupby("Estado")["Edad"].count().reset_index() \
+                      .sort_values('Edad', ascending=False) \
+                      .set_index('Estado')
+    estados = list(rs.index)
+    values = list(rs.values)
+
+    df['RangoDeEdad'] = df.Edad // 10
+        # str((df["Edad"] % 10)*10) + '-' + str(((df["Edad"] % 10)+1)*10)
+    rs = df.groupby("RangoDeEdad")["Edad"].count()
+    rango_de_edad = list(rs.index)
+    v_rango_de_edad = list(rs.values)
+
+    for i, v in enumerate(values):
+        values[i] = values[i][0]
+    for i, v in enumerate(rango_de_edad):
+        rango_de_edad[i] = str(rango_de_edad[i] * 10) + '-' + str((rango_de_edad[i] + 1) * 10)
+
+    context = {"estados": estados, 'values': values,
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
+    return render(request, 'index.html', context=context)
+
+
+def suspected(request):
+    #    table_content = df.to_html(index=None)
+    #    table_content = table_content.replace("", "")
+    #    table_content = table_content.replace('class="dataframe"', "class='table table-striped'")
+    #    table_content = table_content.replace('border="1"', "")
+    # 'table_data': table_content
+    return render(request, 'suspected.html', context=context)
+
+
+
+def last_from(request):
+    """ view function for sales app """
     dt = "7 de abril de 2020"
     file_name = "2020.04.07_confirmed_cases.csv"
     # read data
@@ -56,18 +95,9 @@ def index(request):
         estados[i]="EEUU"
         print(i)
         print(estados[i])
-#    table_content = df.to_html(index=None)
-#    table_content = table_content.replace("", "")
-#    table_content = table_content.replace('class="dataframe"', "class='table table-striped'")
-#    table_content = table_content.replace('border="1"', "")
-    # 'table_data': table_content
+
     values_origen = [{'name': 'Casos por origen', 'data': values}]
     context = {"estados": estados, "procedencia": procedencia, "v_procedencia": v_procedencia,
                'values': values, 'values_origen': values_origen, 'v_estado_origen' : v_estado_origen,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
     return render(request, 'index.html', context=context)
-
-
-def suspected(request):
-
-    return render(request, 'suspected.html', context=context)

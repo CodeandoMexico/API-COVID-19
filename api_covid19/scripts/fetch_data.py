@@ -106,15 +106,27 @@ def run():
     sc_filename = f'{report_date}_suspected_cases' # Suspected cases filename
     print(pdf_links)
     # Download PDFs
-    downloadPDF(url=pdf_links['confirmed_cases'], filename=cc_filename)
-    print(cc_filename + ".pdf descargado")
-    downloadPDF(url=pdf_links['suspected_cases'], filename=sc_filename)
-    print(sc_filename + ".pdf descargado")
+    if os.path.exists(f'api_covid19/files/{cc_filename}.pdf'):
+        print(cc_filename + ".pdf ya existía")
+    else:
+        downloadPDF(url=pdf_links['confirmed_cases'], filename=cc_filename)
+        print(cc_filename + ".pdf descargado")
+    if os.path.exists(f'api_covid19/files/{sc_filename}.pdf'):
+        print(sc_filename + ".pdf ya existía")
+    else:
+        downloadPDF(url=pdf_links['suspected_cases'], filename=sc_filename)
+        print(sc_filename + ".pdf descargado")
 
-    generateCSV(cc_filename)
-    print(cc_filename + ".csv generado")
-    generateCSV(sc_filename)
-    print(sc_filename + ".csv generado")
+    if os.path.exists(f'api_covid19/files/{cc_filename}.csv'):
+        print(sc_filename + ".csv ya existía")
+    else:
+        generateCSV(cc_filename)
+        print(cc_filename + ".csv generado")
+    if os.path.exists(f'api_covid19/files/{sc_filename}.csv'):
+        print(sc_filename + ".csv ya existía")
+    else:
+        generateCSV(sc_filename)
+        print(sc_filename + ".csv generado")
 
 if __name__ == '__main__':
     run()
