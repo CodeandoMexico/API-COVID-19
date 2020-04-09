@@ -16,17 +16,40 @@ def index(request):
     values = list(rs.values)
 
     df['RangoDeEdad'] = df.Edad // 10
-        # str((df["Edad"] % 10)*10) + '-' + str(((df["Edad"] % 10)+1)*10)
     rs = df.groupby("RangoDeEdad")["Edad"].count()
     rango_de_edad = list(rs.index)
     v_rango_de_edad = list(rs.values)
 
+    edad_genero = []
     for i, v in enumerate(values):
         values[i] = values[i][0]
+
+    edad_genero.append([0] * len(rango_de_edad))
+    edad_genero.append([0] * len(rango_de_edad))
+    print(edad_genero)
+
+    rs_edad_genero = df.groupby(["RangoDeEdad", "Sexo"])["N° Caso"].count()
+    cur_rango = ''
+    i_rango=-1
+    print(rs_edad_genero)
+    for i, v in enumerate(rs_edad_genero):
+        print(rs_edad_genero.index[i])
+        if rs_edad_genero.index[i][0] != cur_rango:
+            cur_rango=rs_edad_genero.index[i][0]
+            i_rango=rango_de_edad.index(cur_rango)
+        i_genero = (0 if rs_edad_genero.index[i][1] == "FEMENINO" else 1)
+        edad_genero[i_genero][i_rango] = v
+    print(edad_genero)
+
+    v_edad_genero = []
+    v_edad_genero.append({'name': 'FEMENINO', 'data': edad_genero[0]})
+    v_edad_genero.append({'name': 'MASCULINO', 'data': edad_genero[1]})
+    print(v_edad_genero)
+
     for i, v in enumerate(rango_de_edad):
         rango_de_edad[i] = str(rango_de_edad[i] * 10) + '-' + str((rango_de_edad[i] + 1) * 10)
 
-    context = {"estados": estados, 'values': values,
+    context = {"estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
     return render(request, 'index.html', context=context)
 

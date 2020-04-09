@@ -1,14 +1,12 @@
-Highcharts.chart('container_rango_de_edad', {
+Highcharts.chart('container_edad_genero', {
 chart: {
-      type: 'column'
+      type: 'bar'
 },
-colors: ['#3B97B2', '#67BC42', '#FF56DE', '#E6D605', '#BC36FE'] ,
-
 title: {
-      text: 'Casos por Rango de Edad'
+      text: 'Casos por Genero y Rango de Edad'
 },
 subtitle: {
-      text: _dt
+      text: ''
 },
 xAxis: {
       categories: _rango_de_edad,
@@ -25,29 +23,25 @@ tooltip: {
       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
   '<td style="padding:0"><b>{point.y}</b></td></tr>',
       footerFormat: '</table>',
-      shared: true,
+      shared: false,
       useHTML: true
 },
 plotOptions: {
-      column: {
-          pointPadding: 0.2,
-          borderWidth: 0,
-          colorByPoint: true
-        },
         series: {
+            stacking: 'normal',
             dataLabels: {
                 enabled: true,
-                align: 'right',
-                color: '#444444',
-                rotation: -90,
-                y: -14
+                formatter: function(){
+                    console.log(this);
+                    var val = this.y;
+                    if (val < 6) {
+                        return '';
+                    }
+                    return val;
+                },
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
             },
-            pointPadding: 0.1,
-            groupPadding: 0
         }
 },
-series: [{
-      name: 'Casos',
-      data: _v_rango_de_edad
-}]
+series: _v_edad_genero
 });

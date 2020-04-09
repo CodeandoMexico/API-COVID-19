@@ -6,7 +6,7 @@ title: {
       text: 'Casos por Estado'
 },
 subtitle: {
-      text: ''
+      text: _dt
 },
 xAxis: {
       categories: _estados,
