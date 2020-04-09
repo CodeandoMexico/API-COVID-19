@@ -3,29 +3,46 @@
   <head>
     <title>COVID-19 en México por Codeando</title>
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/codeando.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   </head>
   <body>
     <!-- Top Bar -->
-     <nav class="navbar navbar-expand-lg navbar-dark bg-dark p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">COVID-19 en México por Codeando</a>
-    </nav>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+          <a class="navbar-brand" href="#" style="color: darkseagreen">COVID-19 en México por Codeando</a>
+
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav mr-auto">
+          <li class="nav-item ">
+            <a class="nav-link" href="/">Confirmados <span class="sr-only">(current)</span></a>
+          </li>
           <li class="nav-item active">
-            <a class="nav-link" href="/">Confirmados </a>
+            <a class="nav-link" href="suspected">Sospechosos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="suspected">Sospechosos<span class="sr-only">(current)</span></a>
-          </li>
-           <li class="nav-item">
             <a class="nav-link" href="last_origin">Procedencia (7 de abril)</a>
           </li>
-        </ul></div>
-    </nav>
+        </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
     <div class="container-fluid" style="display: block; margin-top: 0px">
 
       <div style="display: block">
@@ -98,6 +115,8 @@ _case_type = "SOSPECHOSOS"
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+</div>
 
   </body>
 </html>
