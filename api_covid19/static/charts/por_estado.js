@@ -3,7 +3,7 @@ chart: {
       type: 'column'
 },
 title: {
-      text: 'Casos por Estado'
+      text: 'Casos ' + _case_type + ' por Estado'
 },
 subtitle: {
       text: _dt

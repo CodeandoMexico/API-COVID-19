@@ -3,10 +3,10 @@ chart: {
       type: 'column'
 },
 title: {
-      text: 'Casos por Procedencia'
+      text: 'Casos ' + _case_type + ' por Procedencia'
 },
 subtitle: {
-      text: ''
+      text: _dt
 },
 xAxis: {
       categories: _procedencia,

@@ -3,10 +3,10 @@ chart: {
       type: 'bar'
 },
 title: {
-      text: 'Casos por Estado y Origen de Viaje'
+      text: 'Casos ' + _case_type + ' por Estado y Origen de Viaje'
 },
 subtitle: {
-      text: ''
+      text: _dt
 },
 xAxis: {
       categories: _estados,

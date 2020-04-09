@@ -19,29 +19,26 @@
             <a class="nav-link" href="/">Confirmados </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="suspected">Sospechosos</a>
+            <a class="nav-link" href="suspected">Sospechosos<span class="sr-only">(current)</span></a>
           </li>
            <li class="nav-item">
-            <a class="nav-link" href="last_origin">Procedencia (7 de abril)<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="last_origin">Procedencia (7 de abril)</a>
           </li>
         </ul></div>
     </nav>
-
     <div class="container-fluid" style="display: block; margin-top: 0px">
 
       <div style="display: block">
-          <h3>CASOS CONFIRMADOS AL {{dt}}</h3>
-        <span style="color:red"><b>ULTIMO DIA QUE PUBLICARON CON PROCEDENCIA</b>
-            <BR/>Fuente: <a href="/static/files/{{file_name}}">{{file_name}}</a></span>
+          <h3>CASOS SOSPECHOSOS AL {{dt}}</h3>
+        <span>Fuente: <a href="/static/files/{{file_name}}">{{file_name}}</a></span>
       </div>
 
       <div class="row">
 
           	  <!-- Highcharts display -->
-	  <div class="border" id="container_origen" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
-	  <div class="border" id="container_estado_origen" style="min-width: 800px; height: 800px; margin: 0 auto"></div>
 	  <div class="border" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="border" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 
       </div>
     </div>
@@ -54,14 +51,11 @@
     <script>
 _estados = {{estados|safe}};
 _values = {{values|safe}};
-_procedencia = {{procedencia|safe}};
-_v_procedencia = {{v_procedencia|safe}};
-_values_origen = {{values_origen|safe}};
-_v_estado_origen = {{v_estado_origen|safe}};
+_v_edad_genero = {{v_edad_genero|safe}};
 _rango_de_edad = {{rango_de_edad|safe}};
 _v_rango_de_edad = {{v_rango_de_edad|safe}};
 _dt = "{{dt|safe}}"
-_case_type = "CONFIRMADOS"
+_case_type = "SOSPECHOSOS"
     </script>
 
         <footer>
@@ -98,9 +92,8 @@ _case_type = "CONFIRMADOS"
         </footer>
 
     <script src="/static/charts/por_estado.js"></script>
-    <script src="/static/charts/por_origen.js"></script>
-    <script src="/static/charts/por_estado_origen.js"></script>
     <script src="/static/charts/por_rango_de_edad.js"></script>
+    <script src="/static/charts/por_edad_genero.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>

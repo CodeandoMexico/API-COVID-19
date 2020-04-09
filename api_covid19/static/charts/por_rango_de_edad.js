@@ -5,7 +5,7 @@ chart: {
 colors: ['#3B97B2', '#67BC42', '#FF56DE', '#E6D605', '#BC36FE'] ,
 
 title: {
-      text: 'Casos por Rango de Edad'
+      text: 'Casos ' + _case_type + ' por Rango de Edad'
 },
 subtitle: {
       text: _dt

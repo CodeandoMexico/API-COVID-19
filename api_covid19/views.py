@@ -2,11 +2,7 @@ from django.shortcuts import render
 import pandas as pd
 import json
 
-def index(request):
-    """ view function for sales app """
-    dt = "8 de abril de 2020"
-    file_name = "2020.04.08_confirmed_cases.csv"
-    # read data
+def get_context(dt, file_name):
 
     df = pd.read_csv("api_covid19/files/"+file_name)
     rs = df.groupby("Estado")["Edad"].count().reset_index() \
@@ -51,10 +47,20 @@ def index(request):
 
     context = {"estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
+    return context
+
+def index(request):
+    dt = "8 de abril de 2020"
+    file_name = "2020.04.08_confirmed_cases.csv"
+    context = get_context(dt, file_name)
     return render(request, 'index.html', context=context)
 
 
 def suspected(request):
+
+    dt = "8 de abril de 2020"
+    file_name = "2020.04.08_suspected_cases.csv"
+    context = get_context(dt, file_name)
     #    table_content = df.to_html(index=None)
     #    table_content = table_content.replace("", "")
     #    table_content = table_content.replace('class="dataframe"', "class='table table-striped'")
@@ -64,8 +70,7 @@ def suspected(request):
 
 
 
-def last_from(request):
-    """ view function for sales app """
+def last_origin(request):
     dt = "7 de abril de 2020"
     file_name = "2020.04.07_confirmed_cases.csv"
     # read data
@@ -123,4 +128,4 @@ def last_from(request):
     context = {"estados": estados, "procedencia": procedencia, "v_procedencia": v_procedencia,
                'values': values, 'values_origen': values_origen, 'v_estado_origen' : v_estado_origen,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
-    return render(request, 'index.html', context=context)
+    return render(request, 'last_from.html', context=context)
