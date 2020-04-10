@@ -27,11 +27,11 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Generales <span class="sr-only">(current)</span></a>
-          </li>
           <li class="nav-item">
-            <a class="nav-link" href="confirmed">Confirmados</a>
+            <a class="nav-link" href="/">Generales</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="confirmed">Confirmados <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="suspected">Sospechosos</a>
@@ -50,16 +50,16 @@
     <div class="container-fluid" style="display: block; margin-top: 0px">
 
       <div style="display: block">
-          <h3>EVOLUCIÓN EN MEXICO AL {{dt}}</h3>
-        <span>Fuentes: <a href="/static/files/{{file_name}}">{{file_name}}</a> (ECDC)
-            <a href="/static/files/{{file_name2}}">{{file_name2}} (GOBMX)</a></span>
+          <h3>CASOS CONFIRMADOS AL {{dt}}</h3>
+        <span>Fuente: <a href="/static/files/{{file_name}}">{{file_name}}</a></span>
       </div>
 
       <div class="row">
 
           	  <!-- Highcharts display -->
-	  <div class="border" id="container_fechas" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
-	  <div class="border" id="container_fechas2" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 
 <!--          <h2 class="pt-4">Section Details</h2>-->
 <!--
@@ -78,12 +78,13 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
     <script>
-_fechas = {{fechas|safe}};
-_v_fechas = {{v_fechas|safe}};
-_fechas2 = {{fechas2|safe}};
-_v_fechas2 = {{v_fechas2|safe}};
+_estados = {{estados|safe}};
+_values = {{values|safe}};
+_v_edad_genero = {{v_edad_genero|safe}};
+_rango_de_edad = {{rango_de_edad|safe}};
+_v_rango_de_edad = {{v_rango_de_edad|safe}};
 _dt = "{{dt|safe}}"
-_case_type = ""
+_case_type = "CONFIRMADOS"
     </script>
 
         <footer>
@@ -119,8 +120,9 @@ _case_type = ""
             </div>
         </footer>
 
-    <script src="/static/charts/por_fechas.js"></script>
-    <script src="/static/charts/por_fechas2.js"></script>
+    <script src="/static/charts/por_estado.js"></script>
+    <script src="/static/charts/por_rango_de_edad.js"></script>
+    <script src="/static/charts/por_edad_genero.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 

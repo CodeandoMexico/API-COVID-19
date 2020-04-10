@@ -49,11 +49,11 @@ def get_context(dt, file_name):
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
     return context
 
-def index(request):
+def confirmed(request):
     dt = "9 de abril de 2020"
     file_name = "2020.04.09_confirmed_cases.csv"
     context = get_context(dt, file_name)
-    return render(request, 'index.html', context=context)
+    return render(request, 'confirmed.html', context=context)
 
 
 def suspected(request):
@@ -68,6 +68,36 @@ def suspected(request):
     # 'table_data': table_content
     return render(request, 'suspected.html', context=context)
 
+def index(request):
+
+    dt = "9 de abril de 2020"
+
+    file_name = "ecdc_cases_2020.04.10.csv"
+    df = pd.read_csv("api_covid19/files/" + file_name)
+    df.dropna(subset=['countryterritoryCode'], inplace=True)
+    df = df[df['countryterritoryCode'].str.contains("MEX")]
+    df = df[df['cases'] > 0]
+    fechas = df['dateRep'].tolist()
+    fechas.reverse()
+    cases = df['cases'].tolist()
+    cases.reverse()
+    deaths = df['deaths'].tolist()
+    deaths.reverse()
+    v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
+    file_name2 = "2020.04.09_confirmed_cases.csv"
+    df = pd.read_csv("api_covid19/files/"+file_name2)
+    for i, v in enumerate(df.columns):
+        df.rename(columns={v: v.replace("\n", "")}, inplace=True)
+    df['Fecha de Inicio de síntomas'] = pd.to_datetime(df['Fecha de Inicio de síntomas'], format='%d/%m/%Y')
+    rs = df.groupby("Fecha de Inicio de síntomas")["N° Caso"].count()
+    fechas_confirmed = list(rs.index)
+    v_fechas_confirmed = list(rs.values)
+    for i, v in enumerate(fechas_confirmed):
+        fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
+    v_fechas2 = [{'name': 'Confirmados-inicio de síntomas', 'data': v_fechas_confirmed}]
+    context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
+               'file_name': file_name, 'file_name2': file_name2, 'dt': dt}
+    return render(request, 'index.html', context=context)
 
 
 def last_origin(request):
@@ -127,5 +157,6 @@ def last_origin(request):
     values_origen = [{'name': 'Casos por origen', 'data': values}]
     context = {"estados": estados, "procedencia": procedencia, "v_procedencia": v_procedencia,
                'values': values, 'values_origen': values_origen, 'v_estado_origen' : v_estado_origen,
-               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad,
+               'file_name': file_name, 'dt': dt}
     return render(request, 'last_from.html', context=context)
