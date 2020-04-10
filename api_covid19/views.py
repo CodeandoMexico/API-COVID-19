@@ -50,16 +50,16 @@ def get_context(dt, file_name):
     return context
 
 def index(request):
-    dt = "8 de abril de 2020"
-    file_name = "2020.04.08_confirmed_cases.csv"
+    dt = "9 de abril de 2020"
+    file_name = "2020.04.09_confirmed_cases.csv"
     context = get_context(dt, file_name)
     return render(request, 'index.html', context=context)
 
 
 def suspected(request):
 
-    dt = "8 de abril de 2020"
-    file_name = "2020.04.08_suspected_cases.csv"
+    dt = "9 de abril de 2020"
+    file_name = "2020.04.09_suspected_cases.csv"
     context = get_context(dt, file_name)
     #    table_content = df.to_html(index=None)
     #    table_content = table_content.replace("", "")
