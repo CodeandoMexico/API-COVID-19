@@ -7,7 +7,7 @@ title: {
       text: 'Casos registrados' + _case_type + ' por dia'
 },
 subtitle: {
-      text: 'Fuente: ECDC (' + _dt + ' no oficial)'
+      text: 'Fuente: ECDC (' + _dt_ecdc + ')'
 },
 xAxis: {
       categories: _fechas,

@@ -58,7 +58,7 @@ def confirmed(request):
 
 def suspected(request):
 
-    dt = "9 de abril de 2020"
+    dt = "9 de abril"
     file_name = "2020.04.09_suspected_cases.csv"
     context = get_context(dt, file_name)
     #    table_content = df.to_html(index=None)
@@ -71,13 +71,17 @@ def suspected(request):
 def index(request):
 
     dt = "9 de abril de 2020"
+    dt_ecdc = "3 PM del 10 de abril"
 
     file_name = "ecdc_cases_2020.04.10.csv"
     df = pd.read_csv("api_covid19/files/" + file_name)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
     df = df[df['cases'] > 0]
+    df['dateRep'] = pd.to_datetime(df['dateRep'], format='%d/%m/%Y')
     fechas = df['dateRep'].tolist()
+    for i, v in enumerate(fechas):
+        fechas[i] = fechas[i].strftime("%Y/%m/%d")
     fechas.reverse()
     cases = df['cases'].tolist()
     cases.reverse()
@@ -94,9 +98,9 @@ def index(request):
     v_fechas_confirmed = list(rs.values)
     for i, v in enumerate(fechas_confirmed):
         fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
-    v_fechas2 = [{'name': 'Confirmados-inicio de síntomas', 'data': v_fechas_confirmed}]
+    v_fechas2 = [{'name': 'Inicio de síntomas de casos Confirmados', 'data': v_fechas_confirmed}]
     context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
-               'file_name': file_name, 'file_name2': file_name2, 'dt': dt}
+               'file_name': file_name, 'file_name2': file_name2, 'dt': dt, 'dt_ecdc': dt_ecdc}
     return render(request, 'index.html', context=context)
 
 
