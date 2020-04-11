@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>COVID-19 en México por Codeando</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/codeando.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <!-- Top Bar -->
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+          <a class="navbar-brand" href="#" style="color: darkseagreen">COVID-19 en México por Codeando</a>
+
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Generales</a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="confirmed">Confirmados <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="suspected">Sospechosos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="last_origin">Procedencia (7 de abril)</a>
+          </li>
+        </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+    <div class="container-fluid" style="display: block; margin-top: 0px">
+
+      <div style="display: block">
+          <h3>CASOS SOSPECHOSOS AL {{dt}}</h3>
+        <span>Fuente: <a href="/static/files/{{file_name}}">{{file_name}}</a></span>
+      </div>
+
+      <div class="row">
+
+          	  <!-- Highcharts display -->
+	  <div class="border" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="border" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+
+      </div>
+    </div>
+
+    <!-- Chartjs libraries -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <script>
+_estados = {{estados|safe}};
+_values = {{values|safe}};
+_v_edad_genero = {{v_edad_genero|safe}};
+_rango_de_edad = {{rango_de_edad|safe}};
+_v_rango_de_edad = {{v_rango_de_edad|safe}};
+_dt = "{{dt|safe}}"
+_case_type = "SOSPECHOSOS"
+    </script>
+
+        <footer>
+            <div class="container p-5">
+                <div class="text-center">
+                    <div>
+                        <a class="navbar-brand scroll" href="#inicio">
+                            <img src="/static/img/codeandomexico.png" alt="CodeandoMexico" class="codeandomexico">
+                        </a>
+                    </div>
+                    <div>
+                        <a class="scroll" href="#proyectos">Proyectos Abiertos</a>
+                        <a class="scroll" href="#colabora">Participa</a>
+                        <a class="scroll" href="#comunidad">Comunidad</a>
+                        <a class="scroll" href="#inicio">Nuestro Prop&oacute;sito</a>
+                        <a class="scroll" href="#contacto">Newsletter</a>
+                    </div>
+                    <div class="">
+                        <p class="font-purple mt-5">Mant&eacute;nte en Contacto</p>
+                    </div>
+                    <div class="">
+                        <a href="https://twitter.com/codeandomexico" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.facebook.com/CodeandoMexico/" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="https://medium.com/codeandomexico" target="_blank"><i class="fab fa-medium"></i></a>
+                        <a href="mailto:equipo@codeandomexico.org?Subject=Hello%20from%20webpage" target="_top"><i class="fas fa-envelope"></i></a>
+                        <a href="https://github.com/CodeandoMexico" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="http://slack.codeandomexico.org/" target="_blank"><i class="fab fa-slack"></i></a>
+                    </div>
+                    <div class="">
+                        <p class="mt-3">Derechos reservados 2018 &copy;</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    <script src="/static/charts/por_estado.js"></script>
+    <script src="/static/charts/por_rango_de_edad.js"></script>
+    <script src="/static/charts/por_edad_genero.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+</div>
+
+  </body>
+</html>

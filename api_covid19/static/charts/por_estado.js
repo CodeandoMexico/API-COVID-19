@@ -2,14 +2,15 @@ Highcharts.chart('container', {
 chart: {
       type: 'column'
 },
+    colors: ['#FFDD33'],
 title: {
-      text: 'Casos por Estado'
+      text: 'Casos ' + _case_type + ' por Estado'
 },
 subtitle: {
-      text: ''
+      text: _dt
 },
 xAxis: {
-      categories:_categories,
+      categories: _estados,
       crosshair: true
 },
 yAxis: {
@@ -37,15 +38,14 @@ plotOptions: {
                 align: 'right',
                 color: '#444444',
                 rotation: -90,
-                y: -15
+                y: -14
             },
             pointPadding: 0.1,
             groupPadding: 0
         }
 },
 series: [{
-      name: 'Núm. Casos',
+      name: 'Casos',
       data: _values
-
 }]
 });

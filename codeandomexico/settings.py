@@ -25,7 +25,7 @@ SECRET_KEY = '38ds!jj+vpmfo(&qk^r*$o$e_6q11nqgaghvp9r_!n!zhj3o+q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -120,7 +120,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = ''
-STATIC_URL = '/static/'
+STATIC_ROOT = 'api_covid19/static/'
+STATIC_URL = 'static/'
 STATICFILES_DIRS = ( 'static', )
 

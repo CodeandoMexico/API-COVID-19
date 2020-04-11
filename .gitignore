@@ -1,5 +1,6 @@
 api_covid19/files/bk/
 api_covid19/files/.~*
+api_covid19/static/files/.~*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
