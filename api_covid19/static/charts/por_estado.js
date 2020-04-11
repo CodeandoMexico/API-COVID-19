@@ -2,6 +2,7 @@ Highcharts.chart('container', {
 chart: {
       type: 'column'
 },
+    colors: ['#FFDD33'],
 title: {
       text: 'Casos ' + _case_type + ' por Estado'
 },

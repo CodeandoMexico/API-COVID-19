@@ -49,6 +49,7 @@ def generateCSV(filename):
     Arguments:
         filename -- PDF to read without .pdf extension
     """
+    print(".", end='')
     # Get path and number of pages
     n_pages = getPagesNumber(filename)
     file_path = f'api_covid19/files/{filename}.pdf'

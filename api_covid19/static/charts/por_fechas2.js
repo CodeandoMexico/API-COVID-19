@@ -4,7 +4,7 @@ Highcharts.chart('container_fechas2', {
     },
     colors: ['#FFDD33'],
 title: {
-      text: 'Info de Casos Conocidos'
+      text: 'Inicio de síntomas de casos Confirmados activos'
 },
 subtitle: {
       text: 'Fuente: Gob. de MX al ' + _dt
@@ -27,6 +27,20 @@ tooltip: {
       shared: true,
       useHTML: true
 },
+
+annotations: [{
+        labels: [{
+            point: {
+                xAxis: 0,
+                yAxis: 0,
+                x: 43,
+                y: 39 },
+            text: 'La mayoría de las personas con inicio de sintomas recientes<br>'
+            +'que serán confirmados, tardarán hasta dos semanas en atenderse<br>'
+            +'y recibir su resultado positivo por COVID 19'
+        }]
+    }],
+
 plotOptions: {
       column: {
           pointPadding: 0.2,

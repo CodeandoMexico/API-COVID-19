@@ -50,16 +50,16 @@ def get_context(dt, file_name):
     return context
 
 def confirmed(request):
-    dt = "9 de abril de 2020"
-    file_name = "2020.04.09_confirmed_cases.csv"
+    dt = "10 de abril"
+    file_name = "2020.04.10_confirmed_cases.csv"
     context = get_context(dt, file_name)
     return render(request, 'confirmed.html', context=context)
 
 
 def suspected(request):
 
-    dt = "9 de abril"
-    file_name = "2020.04.09_suspected_cases.csv"
+    dt = "10 de abril"
+    file_name = "2020.04.10_suspected_cases.csv"
     context = get_context(dt, file_name)
     #    table_content = df.to_html(index=None)
     #    table_content = table_content.replace("", "")
@@ -70,10 +70,10 @@ def suspected(request):
 
 def index(request):
 
-    dt = "9 de abril de 2020"
-    dt_ecdc = "3 PM del 10 de abril"
+    dt = "10 de abril de 2020"
+    dt_ecdc = "10 de abril (ajustado)"
 
-    file_name = "ecdc_cases_2020.04.10.csv"
+    file_name = "ecdc_cases_2020.04.10b.csv"
     df = pd.read_csv("api_covid19/files/" + file_name)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
@@ -88,7 +88,7 @@ def index(request):
     deaths = df['deaths'].tolist()
     deaths.reverse()
     v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
-    file_name2 = "2020.04.09_confirmed_cases.csv"
+    file_name2 = "2020.04.10_confirmed_cases.csv"
     df = pd.read_csv("api_covid19/files/"+file_name2)
     for i, v in enumerate(df.columns):
         df.rename(columns={v: v.replace("\n", "")}, inplace=True)
@@ -98,7 +98,14 @@ def index(request):
     v_fechas_confirmed = list(rs.values)
     for i, v in enumerate(fechas_confirmed):
         fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
-    v_fechas2 = [{'name': 'Inicio de síntomas de casos Confirmados', 'data': v_fechas_confirmed}]
+    v_fechas2 = [{'name': 'Casos', 'data': v_fechas_confirmed,
+                 'zoneAxis': 'x', 'zones': [{'value': 7}, {'dashStyle': 'dot', 'color': {
+    'linearGradient': { 'x1': .25, 'x2': 1, 'y1': 0, 'y2': 0},
+    'stops': [
+        [0, '#FFDD33'],
+        [1, 'white']
+    ]
+}}]}]
     context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
                'file_name': file_name, 'file_name2': file_name2, 'dt': dt, 'dt_ecdc': dt_ecdc}
     return render(request, 'index.html', context=context)
