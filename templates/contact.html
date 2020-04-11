@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Sugerencia / pregunta / comentario{% endblock title %}
+{% block content %}
+<br>
+
+<h3>Sugerencias / Preguntas / Comentarios</h3>
+
+{% if submitted %}
+     <p class="success">
+        Mensaje enviado exitósamente, lo revisamos en breve.
+     </p>
+
+ {% else %}
+     <form action="" method="post" novalidate>
+     <table id="tblComments">
+         {{ form.as_table }}
+         <tr>
+             <td>&nbsp;</td>
+             <td><input type="submit" value="Enviar"></td>
+         </tr>
+     </table>
+     {% csrf_token %}
+     </form>
+ {% endif %}
+ {% endblock content %}
