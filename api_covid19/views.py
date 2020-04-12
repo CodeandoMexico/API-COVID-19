@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import pandas as pd
 import json
+import datetime
 
 def get_context(dt, file_name):
 
@@ -50,16 +51,16 @@ def get_context(dt, file_name):
     return context
 
 def confirmed(request):
-    dt = "10 de abril"
-    file_name = "2020.04.10_confirmed_cases.csv"
+    dt = "11 de abril"
+    file_name = "2020.04.11_confirmed_cases.csv"
     context = get_context(dt, file_name)
     return render(request, 'confirmed.html', context=context)
 
 
 def suspected(request):
 
-    dt = "10 de abril"
-    file_name = "2020.04.10_suspected_cases.csv"
+    dt = "11 de abril"
+    file_name = "2020.04.11_suspected_cases.csv"
     context = get_context(dt, file_name)
     #    table_content = df.to_html(index=None)
     #    table_content = table_content.replace("", "")
@@ -70,15 +71,16 @@ def suspected(request):
 
 def index(request):
 
-    dt = "10 de abril de 2020"
-    dt_ecdc = "10 de abril (ajustado)"
+    dt = "11 de abril de 2020"
+    dt_ecdc = "11 de abril (ajustado)"
 
-    file_name = "ecdc_cases_2020.04.10b.csv"
+    file_name = "ecdc_cases_2020.04.11.csv"
     df = pd.read_csv("api_covid19/files/" + file_name)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
     df = df[df['cases'] > 0]
     df['dateRep'] = pd.to_datetime(df['dateRep'], format='%d/%m/%Y')
+    df['dateRep'] = df['dateRep']  + datetime.timedelta(days=-1)
     fechas = df['dateRep'].tolist()
     for i, v in enumerate(fechas):
         fechas[i] = fechas[i].strftime("%Y/%m/%d")
@@ -88,7 +90,7 @@ def index(request):
     deaths = df['deaths'].tolist()
     deaths.reverse()
     v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
-    file_name2 = "2020.04.10_confirmed_cases.csv"
+    file_name2 = "2020.04.11_confirmed_cases.csv"
     df = pd.read_csv("api_covid19/files/"+file_name2)
     for i, v in enumerate(df.columns):
         df.rename(columns={v: v.replace("\n", "")}, inplace=True)
