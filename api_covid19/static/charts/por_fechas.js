@@ -1,4 +1,9 @@
-Highcharts.chart('container_fechas', {
+document.currentScript = document.currentScript || (function() {
+  var scripts = document.getElementsByTagName('script');
+  return scripts[scripts.length - 1];
+})();
+
+Highcharts.chart(document.currentScript.getAttribute('container'), {
     chart: {
         type: 'area'
     },
@@ -7,7 +12,7 @@ title: {
       text: 'Casos registrados' + _case_type + ' por dia'
 },
 subtitle: {
-      text: 'Fuente: ECDC (' + _dt_ecdc + ')'
+      text: 'Fuente: ECDC - ' + _dt_ecdc
 },
 xAxis: {
       categories: _fechas,

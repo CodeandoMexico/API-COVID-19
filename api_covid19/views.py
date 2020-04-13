@@ -3,9 +3,16 @@ import pandas as pd
 import json
 import datetime
 
+ecdc_date = "12 de abril (ajustado)"
+ecdc_file = "ecdc_cases_2020.04.12.csv"
+confirmed_date = "12 de abril"
+confirmed_file = "2020.04.12_confirmed_cases.csv"
+suspected_date = "12 de abril"
+suspected_file = "2020.04.12_suspected_cases.csv"
+
 def get_context(dt, file_name):
 
-    df = pd.read_csv("api_covid19/files/"+file_name)
+    df = pd.read_csv("api_covid19/static/files/"+file_name)
     rs = df.groupby("Estado")["Edad"].count().reset_index() \
                       .sort_values('Edad', ascending=False) \
                       .set_index('Estado')
@@ -50,18 +57,14 @@ def get_context(dt, file_name):
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
     return context
 
+
 def confirmed(request):
-    dt = "11 de abril"
-    file_name = "2020.04.11_confirmed_cases.csv"
-    context = get_context(dt, file_name)
+    context = get_context(confirmed_date, confirmed_file)
     return render(request, 'confirmed.html', context=context)
 
 
 def suspected(request):
-
-    dt = "11 de abril"
-    file_name = "2020.04.11_suspected_cases.csv"
-    context = get_context(dt, file_name)
+    context = get_context(suspected_date, suspected_file)
     #    table_content = df.to_html(index=None)
     #    table_content = table_content.replace("", "")
     #    table_content = table_content.replace('class="dataframe"', "class='table table-striped'")
@@ -69,13 +72,9 @@ def suspected(request):
     # 'table_data': table_content
     return render(request, 'suspected.html', context=context)
 
+
 def index(request):
-
-    dt = "11 de abril de 2020"
-    dt_ecdc = "11 de abril (ajustado)"
-
-    file_name = "ecdc_cases_2020.04.11.csv"
-    df = pd.read_csv("api_covid19/files/" + file_name)
+    df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
     df = df[df['cases'] > 0]
@@ -90,8 +89,19 @@ def index(request):
     deaths = df['deaths'].tolist()
     deaths.reverse()
     v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
-    file_name2 = "2020.04.11_confirmed_cases.csv"
-    df = pd.read_csv("api_covid19/files/"+file_name2)
+    cases_totals = []
+    total = 0
+    for i, v in enumerate(cases):
+        total += v
+        cases_totals.append(total)
+    deaths_totals = []
+    total = 0
+    for i, v in enumerate(deaths):
+        total += v
+        deaths_totals.append(total)
+    v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
+
+    df = pd.read_csv("api_covid19/static/files/"+confirmed_file)
     for i, v in enumerate(df.columns):
         df.rename(columns={v: v.replace("\n", "")}, inplace=True)
     df['Fecha de Inicio de síntomas'] = pd.to_datetime(df['Fecha de Inicio de síntomas'], format='%d/%m/%Y')
@@ -109,7 +119,8 @@ def index(request):
     ]
 }}]}]
     context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
-               'file_name': file_name, 'file_name2': file_name2, 'dt': dt, 'dt_ecdc': dt_ecdc}
+               'v_totals': v_totals,
+               'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': confirmed_date, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
 
 
@@ -118,7 +129,7 @@ def last_origin(request):
     file_name = "2020.04.07_confirmed_cases.csv"
     # read data
 
-    df = pd.read_csv("api_covid19/files/"+file_name)
+    df = pd.read_csv("api_covid19/static/files/"+file_name)
     rs = df.groupby("Estado")["Procedencia"].count().reset_index() \
                       .sort_values('Procedencia', ascending=False) \
                       .set_index('Estado')

@@ -6,12 +6,13 @@
 
       <div style="display: block">
           <h3>EVOLUCIÓN EN MEXICO AL {{dt}}</h3>
-        <span>Fuentes: <a href="/static/files/{{file_name}}">{{file_name}}</a> (ECDC)
-            <a href="/static/files/{{file_name2}}">{{file_name2}}</a> (GOBMX)</span>
+        <span>Fuentes: <a href="/static/files/{{file_name}}">{{file_name}}</a> (<a target="_otra" href="https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide">ECDC</a>),
+            <a href="/static/files/{{file_name2}}">{{file_name2}}</a> (<a target="_otra" href="https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449">GOBMX</a>)</span>
       </div>
 
       <div class="row">
                   <!-- Highcharts display -->
+          <div class="border" id="container_totals" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
           <div class="border" id="container_fechas" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
           <div class="border" id="container_fechas2" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 
@@ -27,7 +28,8 @@
 
     <script>
 _fechas = {{fechas|safe}};
-_v_fechas = {{v_fechas|safe}};
+_v_fechas = {{v_fechas|safe}}
+_v_totals = {{v_totals|safe}}
 _fechas2 = {{fechas2|safe}};
 _v_fechas2 = {{v_fechas2|safe}};
 _dt = "{{dt|safe}}"
@@ -37,7 +39,8 @@ _case_type = ""
 
 
     <script src="/static/scripts/main.js"></script>
-    <script src="/static/charts/por_fechas.js"></script>
+    <script src="/static/charts/por_totals.js" container="container_totals" i_totals="1"></script>
+    <script src="/static/charts/por_fechas.js" container="container_fechas" i_totals="1"></script>
     <script src="/static/charts/por_fechas2.js"></script>
 
 {% endblock content %}
