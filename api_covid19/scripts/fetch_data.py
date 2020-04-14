@@ -1,4 +1,5 @@
 import PyPDF2
+import pandas
 import requests
 import camelot.io as camelot
 import pandas as pd
@@ -22,7 +23,7 @@ def downloadFile(url, filename):
     success = r.status_code == requests.codes.ok
 
     if success:
-        with open(f'api_covid19/files/{filename}.pdf', 'wb') as f:
+        with open(f'api_covid19/files/{filename}', 'wb') as f:
             f.write(r.content)
     else:
         warnings.warn(f"********", FutureWarning)
@@ -101,12 +102,14 @@ def getPDFLinks():
 
     return links
 
-def proc_download(url, filename):
-    if os.path.exists(f'api_covid19/files/{filename}'):
+
+def proc_download(url, filename, location='files/'):
+    if os.path.exists(f'api_covid19/{location}{filename}'):
         print(filename + " ya existía")
     else:
         downloadFile(url=url, filename=filename)
         print(filename + " descargado")
+
 
 def run():
     print("Iniciando")
@@ -119,25 +122,39 @@ def run():
     sc_filename = f'{report_date}_suspected_cases' # Suspected cases filename
     print(pdf_links)
     # Download PDFs
-    ecdc_url = "https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
+    ecdc_url = f"https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
+
     ecdc_filename = "ecdc_cases_" + datetime.today().strftime("%Y.%m.%d") + '.csv'
 
-    proc_download(ecdc_url, ecdc_filename)
+    proc_download(ecdc_url, ecdc_filename, 'static/files/')
     proc_download(pdf_links['confirmed_cases'], cc_filename+'.pdf')
     proc_download(pdf_links['suspected_cases'], sc_filename+'.pdf')
 
-    cc_filename += '.csv'
-    if os.path.exists(f'api_covid19/files/{cc_filename}'):
-        print(cc_filename + " ya existía")
+    if os.path.exists(f'api_covid19/static/files/{cc_filename}.csv'):
+        print(cc_filename + ".csv ya existía")
     else:
         generateCSV(cc_filename)
-        print(cc_filename + " generado")
-    sc_filename += '.csv'
-    if os.path.exists(f'api_covid19/files/{sc_filename}'):
-        print(sc_filename + " ya existía")
+        print(cc_filename + ".csv generado")
+    if os.path.exists(f'api_covid19/static/files/{sc_filename}.csv'):
+        print(sc_filename + ".csv ya existía")
     else:
         generateCSV(sc_filename)
-        print(sc_filename + " generado")
+        print(sc_filename + ".csv generado")
+
+def run_new():
+    ecdc_url = f"https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
+    ecdc_filename = "ecdc_cases_" + datetime.today().strftime("%Y.%m.%d") + '.csv'
+    proc_download(ecdc_url, ecdc_filename, 'static/files/')
+
+#    datos_abiertos = "api_covid19/static/files/COVID19_Mexico_13.04.2020.csv"
+
+    import sqlite3
+    conn = sqlite3.connect("covid19mx.db")
+#    df = pandas.read_csv(datos_abiertos, encoding = "latin")
+#    df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
+#    print("Datos Abiertos copiados a SQLLITE")
+    conn.close()
+
 
 if __name__ == '__main__':
     run()

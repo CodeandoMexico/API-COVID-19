@@ -41,3 +41,11 @@ input {
     border: 1px solid green;
     border-radius: 3px;
 }
+.warning {
+    background-color: rgba(128, 0, 0, 0.15);
+    padding: 10px;
+    text-align: center;
+    color: red;
+    border: 1px solid red;
+    border-radius: 3px;
+}

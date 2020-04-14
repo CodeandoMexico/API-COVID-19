@@ -2,13 +2,14 @@ from django.shortcuts import render
 import pandas as pd
 import json
 import datetime
+import sqlite3
 
-ecdc_date = "12 de abril (ajustado)"
-ecdc_file = "ecdc_cases_2020.04.12.csv"
-confirmed_date = "12 de abril"
-confirmed_file = "2020.04.12_confirmed_cases.csv"
-suspected_date = "12 de abril"
-suspected_file = "2020.04.12_suspected_cases.csv"
+ecdc_date = "13 de abril (ajustado)"
+ecdc_file = "ecdc_cases_2020.04.13.csv"
+confirmed_date = "13 de abril"
+confirmed_file = "2020.04.13_confirmed_cases.csv"
+suspected_date = "13 de abril"
+suspected_file = "2020.04.13_suspected_cases.csv"
 
 def get_context(dt, file_name):
 
@@ -73,7 +74,7 @@ def suspected(request):
     return render(request, 'suspected.html', context=context)
 
 
-def index(request):
+def index_prev(request):
     df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
@@ -101,6 +102,74 @@ def index(request):
         deaths_totals.append(total)
     v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
 
+    df = pd.read_csv("api_covid19/static/files/"+confirmed_file)
+    for i, v in enumerate(df.columns):
+        df.rename(columns={v: v.replace("\n", "")}, inplace=True)
+    df['Fecha de Inicio de síntomas'] = pd.to_datetime(df['Fecha de Inicio de síntomas'], format='%d/%m/%Y')
+    rs = df.groupby("Fecha de Inicio de síntomas")["N° Caso"].count()
+    fechas_confirmed = list(rs.index)
+    v_fechas_confirmed = list(rs.values)
+    for i, v in enumerate(fechas_confirmed):
+        fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
+    v_fechas2 = [{'name': 'Casos', 'data': v_fechas_confirmed,
+                 'zoneAxis': 'x', 'zones': [{'value': 7}, {'dashStyle': 'dot', 'color': {
+    'linearGradient': { 'x1': .25, 'x2': 1, 'y1': 0, 'y2': 0},
+    'stops': [
+        [0, '#FFDD33'],
+        [1, 'white']
+    ]
+}}]}]
+    context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
+               'v_totals': v_totals,
+               'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': confirmed_date, 'dt_ecdc': ecdc_date}
+    return render(request, 'index.html', context=context)
+
+def index(request):
+    df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
+    df.dropna(subset=['countryterritoryCode'], inplace=True)
+    df = df[df['countryterritoryCode'].str.contains("MEX")]
+    df = df[df['cases'] > 0]
+    df['dateRep'] = pd.to_datetime(df['dateRep'], format='%d/%m/%Y')
+    df['dateRep'] = df['dateRep']  + datetime.timedelta(days=-1)
+    fechas = df['dateRep'].tolist()
+    fechas.reverse()
+    cases = df['cases'].tolist()
+    cases.reverse()
+    deaths = df['deaths'].tolist()
+    deaths.reverse()
+    v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
+    cases_totals = []
+    total = 0
+    for i, v in enumerate(cases):
+        total += v
+        cases_totals.append(total)
+    deaths_totals = []
+    total = 0
+    for i, v in enumerate(deaths):
+        total += v
+        deaths_totals.append(total)
+    v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
+
+    conn = sqlite3.connect("covid19mx.db")
+    cur = conn.cursor()
+    cur.execute("SELECT  (SELECT COUNT(*) FROM datos_abiertos_MX WHERE RESULTADO = 1) as Confirmados" +
+        ", (SELECT COUNT(*) FROM datos_abiertos_MX WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99') as Decesos")
+    rows = cur.fetchall()
+    print(rows)
+    print(rows[0][0])
+    if cases_totals[len(cases_totals)-1] < rows[0][0]:
+        new_cases = rows[0][0] - cases_totals[len(cases_totals)-1]
+        new_deaths = rows[0][1] - deaths_totals[len(deaths_totals)-1]
+        cases.append(new_cases)
+        deaths.append(new_deaths)
+        cases_totals.append(rows[0][0])
+        deaths_totals.append(rows[0][1])
+        fechas.append(fechas[len(fechas)-1] + datetime.timedelta(days=1))
+    cur.close()
+    conn.close()
+
+    for i, v in enumerate(fechas):
+        fechas[i] = fechas[i].strftime("%Y/%m/%d")
     df = pd.read_csv("api_covid19/static/files/"+confirmed_file)
     for i, v in enumerate(df.columns):
         df.rename(columns={v: v.replace("\n", "")}, inplace=True)
