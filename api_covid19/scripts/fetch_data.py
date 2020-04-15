@@ -1,3 +1,5 @@
+import urllib
+
 import PyPDF2
 import pandas
 import requests
@@ -10,24 +12,26 @@ import re
 import warnings
 from datetime import datetime
 from bs4 import BeautifulSoup
+import zipfile
 
-def downloadFile(url, filename):
+
+def downloadFile(url, filename, location='files/'):
     """
     Download file from given {url} and store file in disk
     Arguments:
         url -- File to download
         filename -- Name of the file to store in disk without .pdf extension
     """
-    url = url
-    r = requests.get(url, stream=True, allow_redirects=False)
+#    url = url
+    r = requests.get(url, allow_redirects=False, stream=True) #,
     success = r.status_code == requests.codes.ok
 
     if success:
-        with open(f'api_covid19/files/{filename}', 'wb') as f:
+        with open(f'api_covid19/{location}{filename}', 'wb') as f:
             f.write(r.content)
     else:
         warnings.warn(f"********", FutureWarning)
-        warnings.warn(f'{url} file not found', FutureWarning)
+        warnings.warn(url + ' file not found', FutureWarning)
 
     return success
 
@@ -107,7 +111,7 @@ def proc_download(url, filename, location='files/'):
     if os.path.exists(f'api_covid19/{location}{filename}'):
         print(filename + " ya existía")
     else:
-        downloadFile(url=url, filename=filename)
+        downloadFile(url=url, filename=filename, location=location)
         print(filename + " descargado")
 
 
@@ -142,17 +146,33 @@ def run():
         print(sc_filename + ".csv generado")
 
 def run_new():
+    to_path = 'static/files/'
     ecdc_url = f"https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
     ecdc_filename = "ecdc_cases_" + datetime.today().strftime("%Y.%m.%d") + '.csv'
-    proc_download(ecdc_url, ecdc_filename, 'static/files/')
+    # proc_download(ecdc_url, ecdc_filename, to_path)
+    # u2 = urllib.request.urlopen(ecdc_url)
+    # for lines in u2.readlines():
+    #     print(lines)
+    df = pd.read_csv(ecdc_url)
+    df.to_csv('api_covid19/' + to_path + ecdc_filename)
+    print("Archivo " + ecdc_filename + " guardado.")
 
-#    datos_abiertos = "api_covid19/static/files/COVID19_Mexico_13.04.2020.csv"
+    da_url = f"http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip"
+    da_filename = "tmp_datos_abiertos_covid19.zip"
+    proc_download(da_url, da_filename, to_path)
+
+    with zipfile.ZipFile('api_covid19/' + to_path + da_filename, 'r') as zip_ref:
+        da_file = zip_ref.namelist()[0];
+        zip_ref.extractall('api_covid19/' + to_path)
+
+    datos_abiertos = 'api_covid19/' + to_path + da_file;
+    print("Datos Abiertos File = " + datos_abiertos)
 
     import sqlite3
     conn = sqlite3.connect("covid19mx.db")
-#    df = pandas.read_csv(datos_abiertos, encoding = "latin")
-#    df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
-#    print("Datos Abiertos copiados a SQLLITE")
+    df = pandas.read_csv(datos_abiertos, encoding = "latin")
+    df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
+    print("Datos Abiertos copiados a SQLLITE")
     conn.close()
 
 

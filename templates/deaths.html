@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Info General{% endblock title %}
+{% block content %}
+
+    <div class="container-fluid" style="display: block; margin-top: 0px">
+
+      <div style="display: block">
+          <h3>DECESOS EN MEXICO AL {{dt}}</h3>
+        <span>Fuentes:
+            <a href="/static/files/{{file_da}}">{{file_da}}</a>
+            (<a target="_otra" href="https://www.gob.mx/salud/documentos/coronavirus-covid-19-comunicado-tecnico-diario-238449https://www.gob.mx/salud/documentos/datos-abiertos-152127">Datos abiertos @ GOBMX</a>)</span>
+      </div>
+<br>
+
+      <div class="row">
+                  <!-- Highcharts display -->
+	  <div class="col-md-6" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+
+<!--
+	  <div class="col-md-6" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="col-md-6" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+-->
+
+      </div>
+
+    </div>
+
+    <!-- Chartjs libraries -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/annotations.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+    <script>
+_estados = {{estados|safe}};
+_values = {{values|safe}};
+_v_edad_genero = {{v_edad_genero|safe}};
+_rango_de_edad = {{rango_de_edad|safe}};
+_v_rango_de_edad = {{v_rango_de_edad|safe}};
+_dt = "{{dt|safe}}"
+_case_type = "DECESOS"
+_colors = ['#C70039']
+    </script>
+
+
+    <script src="/static/scripts/main.js"></script>
+
+    <script src="/static/charts/por_estado.js"></script>
+
+<!--
+    <script src="/static/charts/por_rango_de_edad.js"></script>
+    <script src="/static/charts/por_edad_genero.js"></script>
+-->
+
+    <p class="warning">
+         Al menos <b>181</b> mexicanos han muerto por COVID-19 en Estados Unidos. [<a href="https://www.eluniversal.com.mx/nacion/politica/coronavirus-mueren-181-mexicanos-en-eu">El Universal</a>, 10 de abril]
+     </p>
+
+{% endblock content %}
+

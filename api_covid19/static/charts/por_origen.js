@@ -2,6 +2,7 @@ Highcharts.chart('container_origen', {
 chart: {
       type: 'column'
 },
+    legend:{ enabled:false },
 title: {
       text: 'Casos ' + _case_type + ' por Procedencia'
 },

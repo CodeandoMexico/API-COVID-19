@@ -4,12 +4,14 @@ import json
 import datetime
 import sqlite3
 
-ecdc_date = "13 de abril (ajustado)"
-ecdc_file = "ecdc_cases_2020.04.13.csv"
-confirmed_date = "13 de abril"
-confirmed_file = "2020.04.13_confirmed_cases.csv"
-suspected_date = "13 de abril"
-suspected_file = "2020.04.13_suspected_cases.csv"
+ecdc_date = "14 de abril (ajustado)"
+ecdc_file = "ecdc_cases_2020.04.14.csv"
+confirmed_date = "14 de abril"
+confirmed_file = "2020.04.14_confirmed_cases.csv"
+suspected_date = "14 de abril"
+suspected_file = "2020.04.14_suspected_cases.csv"
+file_da = "200414COVID19MEXICO.csv"
+dt_da = "14 de abril"
 
 def get_context(dt, file_name):
 
@@ -124,6 +126,32 @@ def index_prev(request):
                'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': confirmed_date, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
 
+def deaths(request):
+
+    conn = sqlite3.connect("covid19mx.db")
+    cur = conn.cursor()
+    # cur.execute("SELECT ENTIDAD_UM, count(*) as DEATHS FROM datos_abiertos_MX d " +
+    #             "WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99' GROUP BY ENTIDAD_UM ORDER BY count(*) DESC")
+    cur.execute("SELECT ENTIDAD_FEDERATIVA, count(*) as DEATHS FROM datos_abiertos_MX d " +
+                "JOIN Catalogo_Entidades e ON d.ENTIDAD_UM = e.CLAVE_ENTIDAD " +
+                "WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99' GROUP BY ENTIDAD_FEDERATIVA ORDER BY count(*) DESC")
+    estados = []
+    values = []
+    for row in cur:
+        estados.append(row[0])
+        values.append(row[1])
+    cur.close()
+
+    v_edad_genero = []
+    rango_de_edad = []
+    v_rango_de_edad = []
+
+    conn.close()
+
+    context = {"estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_da, 'dt': dt_da}
+    return render(request, 'deaths.html', context=context)
+
 def index(request):
     df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
@@ -191,7 +219,6 @@ def index(request):
                'v_totals': v_totals,
                'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': confirmed_date, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
-
 
 def last_origin(request):
     dt = "7 de abril de 2020"

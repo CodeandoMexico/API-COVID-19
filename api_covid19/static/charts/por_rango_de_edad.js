@@ -2,6 +2,7 @@ Highcharts.chart('container_rango_de_edad', {
 chart: {
       type: 'column'
 },
+legend:{ enabled:false },
 colors: ['#3B97B2', '#67BC42', '#FF56DE', '#E6D605', '#BC36FE'] ,
 
 title: {
