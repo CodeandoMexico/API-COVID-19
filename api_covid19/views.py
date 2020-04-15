@@ -149,7 +149,7 @@ def deaths(request):
     conn.close()
 
     context = {"estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
-               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_da, 'dt': dt_da}
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da}
     return render(request, 'deaths.html', context=context)
 
 def index(request):
