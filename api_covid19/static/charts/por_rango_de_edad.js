@@ -3,10 +3,10 @@ chart: {
       type: 'column'
 },
 legend:{ enabled:false },
-colors: ['#3B97B2', '#67BC42', '#FF56DE', '#E6D605', '#BC36FE'] ,
+colors: _colors_rango_de_edad ,
 
 title: {
-      text: 'Casos ' + _case_type + ' por Rango de Edad'
+      text: _case_type + ' por Rango de Edad'
 },
 subtitle: {
       text: _dt

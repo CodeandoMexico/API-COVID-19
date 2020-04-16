@@ -15,11 +15,9 @@
       <div class="row">
                   <!-- Highcharts display -->
 	  <div class="col-md-6" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
-
-<!--
 	  <div class="col-md-6" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
--->
+
 
       </div>
 
@@ -40,20 +38,20 @@ _v_rango_de_edad = {{v_rango_de_edad|safe}};
 _dt = "{{dt|safe}}"
 _case_type = "DECESOS"
 _colors = ['#C70039']
+_colors_rango_de_edad = ['#C70039', '#900C3F', '#E74C3C']
+_colors_genero_edad = ['#C70039', '#E74C3C']
     </script>
 
 
     <script src="/static/scripts/main.js"></script>
 
     <script src="/static/charts/por_estado.js"></script>
-
-<!--
     <script src="/static/charts/por_rango_de_edad.js"></script>
     <script src="/static/charts/por_edad_genero.js"></script>
--->
+
 
     <p class="warning">
-         Al menos <b>181</b> mexicanos han muerto por COVID-19 en Estados Unidos. [<a target="_otra" href="https://www.eluniversal.com.mx/nacion/politica/coronavirus-mueren-181-mexicanos-en-eu">El Universal</a>, 10 de abril]
+         Al menos <b>216</b> mexicanos han muerto por COVID-19 en Estados Unidos. [<a target="_otra" href="https://www.proceso.com.mx/625885/sube-a-216-el-numero-de-mexicanos-muertos-en-eu-por-covid-19">Proceso</a>, 15 de abril]
      </p>
 
 {% endblock content %}

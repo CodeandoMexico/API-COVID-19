@@ -3,8 +3,9 @@ chart: {
       type: 'bar'
 },
 title: {
-      text: 'Casos ' + _case_type + ' por Genero y Rango de Edad'
+      text: _case_type + ' por Genero y Rango de Edad'
 },
+colors: _colors_genero_edad ,
 subtitle: {
       text: ''
 },

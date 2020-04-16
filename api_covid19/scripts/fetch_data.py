@@ -115,7 +115,7 @@ def proc_download(url, filename, location='files/'):
         print(filename + " descargado")
 
 
-def run():
+def run_prev():
     print("Iniciando")
     pdf_links = getPDFLinks()
      # Extract date from document URL
@@ -125,12 +125,7 @@ def run():
     cc_filename = f'{report_date}_confirmed_cases' # Confirmed cases filename
     sc_filename = f'{report_date}_suspected_cases' # Suspected cases filename
     print(pdf_links)
-    # Download PDFs
-    ecdc_url = f"https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
 
-    ecdc_filename = "ecdc_cases_" + datetime.today().strftime("%Y.%m.%d") + '.csv'
-
-    proc_download(ecdc_url, ecdc_filename, 'static/files/')
     proc_download(pdf_links['confirmed_cases'], cc_filename+'.pdf')
     proc_download(pdf_links['suspected_cases'], sc_filename+'.pdf')
 
@@ -145,7 +140,9 @@ def run():
         generateCSV(sc_filename)
         print(sc_filename + ".csv generado")
 
-def run_new():
+def run():
+    print("Iniciando")
+
     to_path = 'static/files/'
     ecdc_url = f"https://opendata.ecdc.europa.eu/covid19/casedistribution/csv"
     ecdc_filename = "ecdc_cases_" + datetime.today().strftime("%Y.%m.%d") + '.csv'
@@ -167,6 +164,7 @@ def run_new():
 
     datos_abiertos = 'api_covid19/' + to_path + da_file;
     print("Datos Abiertos File = " + datos_abiertos)
+    os.remove('api_covid19/' + to_path + da_filename)
 
     import sqlite3
     conn = sqlite3.connect("covid19mx.db")
@@ -175,6 +173,7 @@ def run_new():
     print("Datos Abiertos copiados a SQLLITE")
     conn.close()
 
+    run_prev()
 
 if __name__ == '__main__':
     run()

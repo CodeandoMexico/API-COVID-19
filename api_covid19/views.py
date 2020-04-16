@@ -4,14 +4,14 @@ import json
 import datetime
 import sqlite3
 
-ecdc_date = "14 de abril (ajustado)"
-ecdc_file = "ecdc_cases_2020.04.14.csv"
-confirmed_date = "14 de abril"
-confirmed_file = "2020.04.14_confirmed_cases.csv"
-suspected_date = "14 de abril"
-suspected_file = "2020.04.14_suspected_cases.csv"
-file_da = "200414COVID19MEXICO.csv"
-dt_da = "14 de abril"
+ecdc_date = "15 de abril (ajustado)"
+ecdc_file = "ecdc_cases_2020.04.15.csv"
+confirmed_date = "15 de abril"
+confirmed_file = "2020.04.15_confirmed_cases.csv"
+suspected_date = "15 de abril"
+suspected_file = "2020.04.15_suspected_cases.csv"
+file_da = "200415COVID19MEXICO.csv"
+dt_da = "15 de abril"
 
 def get_context(dt, file_name):
 
@@ -140,13 +140,56 @@ def deaths(request):
     for row in cur:
         estados.append(row[0])
         values.append(row[1])
-    cur.close()
+#    cur.close()
 
     v_edad_genero = []
     rango_de_edad = []
+    por_rango_fem = []
+    por_rango_mas = []
+    por_rango_sin = []
     v_rango_de_edad = []
 
+    cur.execute("SELECT (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0' as RANGO_EDAD, c.DESCRIPCIÓN, count(*) as DEATHS "
+                "FROM datos_abiertos_MX d JOIN Catalogo_Sexo c ON d.SEXO = c.CLAVE "
+                "WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99' "
+                "GROUP BY (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0', SEXO ORDER BY RANGO_EDAD ")
+    cur_rango = ''
+    for row in cur:
+        if cur_rango != row[0]:
+            cur_rango = row[0]
+            if len(por_rango_fem) < len(rango_de_edad):
+                por_rango_fem.append(0)
+            if len(por_rango_mas) < len(rango_de_edad):
+                por_rango_mas.append(0)
+            if len(por_rango_sin) < len(rango_de_edad):
+                por_rango_sin.append(0)
+            rango_de_edad.append(row[0])
+        if row[1] == "MUJER":
+            por_rango_fem.append(row[2])
+        elif row[1] == "HOMBRE":
+            por_rango_mas.append(row[2])
+        else:
+            por_rango_sin.append(row[2])
+
+    if len(por_rango_fem) < len(rango_de_edad):
+        por_rango_fem.append(0)
+    if len(por_rango_mas) < len(rango_de_edad):
+        por_rango_mas.append(0)
+    if len(por_rango_sin) < len(rango_de_edad):
+        por_rango_sin.append(0)
+    cur.close()
     conn.close()
+    print(rango_de_edad)
+    print(por_rango_fem)
+    print(por_rango_mas)
+    print(por_rango_sin)
+    for i, v in enumerate(rango_de_edad):
+        v_rango_de_edad.append(por_rango_fem[i] + por_rango_mas[i] + por_rango_sin[i])
+
+    v_edad_genero.append({'name': 'FEMENINO', 'data': por_rango_fem})
+    v_edad_genero.append({'name': 'MASCULINO', 'data': por_rango_mas})
+    if sum(por_rango_sin) > 0:
+        v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
     context = {"estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da}
