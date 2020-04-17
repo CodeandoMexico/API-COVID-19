@@ -12,10 +12,19 @@
       </div>
 <br>
 
+        <div class="row">
+                <p class="warning">
+         Al menos <b>276</b> mexicanos han muerto por COVID-19 en Estados Unidos.
+        [<a target="_otra" href="https://www.proceso.com.mx/626053/en-24-horas-60-mexicanos-murieron-en-eu-por-covid-19-suman-276">
+          Proceso</a>, 16 de abril]
+     </p>
+
+        </div>
       <div class="row">
                   <!-- Highcharts display -->
 	  <div class="col-md-6" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="col-md-6" id="cont_cats" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 
 
@@ -32,6 +41,8 @@
     <script>
 _estados = {{estados|safe}};
 _values = {{values|safe}};
+_cats = {{cats|safe}};
+_v_cats = {{v_cats|safe}};
 _v_edad_genero = {{v_edad_genero|safe}};
 _rango_de_edad = {{rango_de_edad|safe}};
 _v_rango_de_edad = {{v_rango_de_edad|safe}};
@@ -47,12 +58,11 @@ _colors_genero_edad = ['#C70039', '#E74C3C']
 
     <script src="/static/charts/por_estado.js"></script>
     <script src="/static/charts/por_rango_de_edad.js"></script>
-    <script src="/static/charts/por_edad_genero.js"></script>
+     <script src="/static/charts/por_cats.js" chart_title="Características de los DECESOS (no excluyentes)"
+     chart_subtitle=" - Cada deceso puede estar en más de una columna"></script>
+   <script src="/static/charts/por_edad_genero.js"></script>
 
 
-    <p class="warning">
-         Al menos <b>216</b> mexicanos han muerto por COVID-19 en Estados Unidos. [<a target="_otra" href="https://www.proceso.com.mx/625885/sube-a-216-el-numero-de-mexicanos-muertos-en-eu-por-covid-19">Proceso</a>, 15 de abril]
-     </p>
 
 {% endblock content %}
 

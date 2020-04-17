@@ -4,14 +4,18 @@ import json
 import datetime
 import sqlite3
 
-ecdc_date = "15 de abril (ajustado)"
-ecdc_file = "ecdc_cases_2020.04.15.csv"
-confirmed_date = "15 de abril"
-confirmed_file = "2020.04.15_confirmed_cases.csv"
-suspected_date = "15 de abril"
-suspected_file = "2020.04.15_suspected_cases.csv"
-file_da = "200415COVID19MEXICO.csv"
-dt_da = "15 de abril"
+dia_ext = "16 de abril"
+dia_punto = "04.16"
+dia = "0416"
+
+ecdc_date = dia_ext + " (ajustado)"
+ecdc_file = f"ecdc_cases_2020.{dia_punto}.csv"
+confirmed_date = dia_ext
+confirmed_file = f"2020.{dia_punto}_confirmed_cases.csv"
+suspected_date = dia_ext
+suspected_file = f"2020.{dia_punto}_suspected_cases.csv"
+file_da = f"20{dia}COVID19MEXICO.csv"
+dt_da = dia_ext
 
 def get_context(dt, file_name):
 
@@ -148,6 +152,8 @@ def deaths(request):
     por_rango_mas = []
     por_rango_sin = []
     v_rango_de_edad = []
+    cats = []
+    v_cats = []
 
     cur.execute("SELECT (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0' as RANGO_EDAD, c.DESCRIPCIÓN, count(*) as DEATHS "
                 "FROM datos_abiertos_MX d JOIN Catalogo_Sexo c ON d.SEXO = c.CLAVE "
@@ -177,12 +183,28 @@ def deaths(request):
         por_rango_mas.append(0)
     if len(por_rango_sin) < len(rango_de_edad):
         por_rango_sin.append(0)
+
+    cur.execute("SELECT "
+                "COUNT(CASE WHEN EDAD >= 60 THEN 1 END) AS '>= 60 AÑOS', "
+                "COUNT(CASE WHEN HIPERTENSION = 1 THEN 1 END) AS HIPERTENSION, "
+                "COUNT(CASE WHEN OBESIDAD = 1 THEN 1 END) AS OBESIDAD, "
+                "COUNT(CASE WHEN DIABETES = 1 THEN 1 END) AS DIABETES, "
+                "COUNT(CASE WHEN INTUBADO = 1 THEN 1 END) AS INTUBADO, "
+                "COUNT(CASE WHEN TABAQUISMO = 1 THEN 1 END) AS TABAQUISMO, "
+                "COUNT(CASE WHEN EMBARAZO = 1 THEN 1 END) AS EMBARAZO "
+                "FROM datos_abiertos_MX WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99'")
+    col_names = list(map(lambda x: x[0], cur.description))
+    for row in cur:
+        for i, v in enumerate(row):
+            cats.append(col_names[i])
+            v_cats.append(row[i])
+    print('***************')
+    print(cats)
+    print(v_cats)
+    print('***************')
+
     cur.close()
     conn.close()
-    print(rango_de_edad)
-    print(por_rango_fem)
-    print(por_rango_mas)
-    print(por_rango_sin)
     for i, v in enumerate(rango_de_edad):
         v_rango_de_edad.append(por_rango_fem[i] + por_rango_mas[i] + por_rango_sin[i])
 
@@ -191,7 +213,7 @@ def deaths(request):
     if sum(por_rango_sin) > 0:
         v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
-    context = {"estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
+    context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da}
     return render(request, 'deaths.html', context=context)
 
