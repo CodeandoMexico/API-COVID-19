@@ -150,21 +150,28 @@ def run():
     # u2 = urllib.request.urlopen(ecdc_url)
     # for lines in u2.readlines():
     #     print(lines)
-    df = pd.read_csv(ecdc_url)
-    df.to_csv('api_covid19/' + to_path + ecdc_filename)
-    print("Archivo " + ecdc_filename + " guardado.")
+    if os.path.exists(f'api_covid19/{to_path}{ecdc_filename}'):
+        print(f'{ecdc_filename} ya existía')
+    else:
+        df = pd.read_csv(ecdc_url)
+        df.to_csv('api_covid19/' + to_path + ecdc_filename)
+        print("Archivo " + ecdc_filename + " guardado.")
 
-    da_url = f"http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip"
-    da_filename = "tmp_datos_abiertos_covid19.zip"
-    proc_download(da_url, da_filename, to_path)
+    datos_abiertos = 'api_covid19/' + to_path + datetime.today().strftime("%y%m%d") + 'COVID19MEXICO.csv'
+    if os.path.exists(datos_abiertos):
+        print(f'{datos_abiertos} ya existía')
+    else:
+        da_url = f"http://187.191.75.115/gobmx/salud/datos_abiertos/datos_abiertos_covid19.zip"
+        da_filename = "tmp_datos_abiertos_covid19.zip"
+        proc_download(da_url, da_filename, to_path)
 
-    with zipfile.ZipFile('api_covid19/' + to_path + da_filename, 'r') as zip_ref:
-        da_file = zip_ref.namelist()[0];
-        zip_ref.extractall('api_covid19/' + to_path)
+        with zipfile.ZipFile('api_covid19/' + to_path + da_filename, 'r') as zip_ref:
+            da_file = zip_ref.namelist()[0];
+            zip_ref.extractall('api_covid19/' + to_path)
 
-    datos_abiertos = 'api_covid19/' + to_path + da_file;
-    print("Datos Abiertos File = " + datos_abiertos)
-    os.remove('api_covid19/' + to_path + da_filename)
+        datos_abiertos = 'api_covid19/' + to_path + da_file
+        print("Datos Abiertos File = " + datos_abiertos)
+        os.remove('api_covid19/' + to_path + da_filename)
 
     import sqlite3
     conn = sqlite3.connect("covid19mx.db")

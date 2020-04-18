@@ -39,11 +39,11 @@ plotOptions: {
         },
         series: {
             dataLabels: {
-                enabled: true,
+                enabled: false,
                 align: 'right',
                 color: '#444444',
-                rotation: -90,
-                y: -14
+                rotation: -0,
+                y: -0
             },
             pointPadding: 0.1,
             groupPadding: 0

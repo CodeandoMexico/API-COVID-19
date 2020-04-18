@@ -3,23 +3,56 @@ import pandas as pd
 import json
 import datetime
 import sqlite3
+import os
 
-dia_ext = "16 de abril"
-dia_punto = "04.16"
-dia = "0416"
+files_path = "api_covid19/static/files/"
+dia_ext = "17 de abril"
+dia_punto = "04.17"
+dia = "0417"
 
-ecdc_date = dia_ext + " (ajustado)"
-ecdc_file = f"ecdc_cases_2020.{dia_punto}.csv"
-confirmed_date = dia_ext
-confirmed_file = f"2020.{dia_punto}_confirmed_cases.csv"
-suspected_date = dia_ext
-suspected_file = f"2020.{dia_punto}_suspected_cases.csv"
-file_da = f"20{dia}COVID19MEXICO.csv"
-dt_da = dia_ext
+ecdc_date = ""
+ecdc_file = ""
+confirmed_date = ""
+confirmed_file = ""
+suspected_date = ""
+suspected_file = ""
+file_da = ""
+dt_da = ""
+
+def update_dates():
+    global ecdc_date, ecdc_file, confirmed_date, confirmed_file, suspected_date, suspected_file, file_da, dt_da
+    ant_dia_ext = "16 de abril"
+    ant_dia_punto = "04.16"
+    ant_dia = "0416"
+    if os.path.exists(files_path + f"ecdc_cases_2020.{dia_punto}.csv"):
+        ecdc_date = dia_ext + " (ajustado)"
+        ecdc_file = f"ecdc_cases_2020.{dia_punto}.csv"
+    else:
+        ecdc_date = ant_dia_ext + " (ajustado)"
+        ecdc_file = f"ecdc_cases_2020.{ant_dia_punto}.csv"
+    if os.path.exists(files_path + f"2020.{dia_punto}_confirmed_cases.csv"):
+        confirmed_date = dia_ext
+        confirmed_file = f"2020.{dia_punto}_confirmed_cases.csv"
+    else:
+        confirmed_date = ant_dia_ext
+        confirmed_file = f"2020.{ant_dia_punto}_confirmed_cases.csv"
+    if os.path.exists(files_path + f"2020.{dia_punto}_suspected_cases.csv"):
+        suspected_date = dia_ext
+        suspected_file = f"2020.{dia_punto}_suspected_cases.csv"
+    else:
+        suspected_date = ant_dia_ext
+        suspected_file = f"2020.{ant_dia_punto}_suspected_cases.csv"
+    if os.path.exists(files_path + f"20{dia}COVID19MEXICO.csv"):
+        file_da = f"20{dia}COVID19MEXICO.csv"
+        dt_da = dia_ext
+    else:
+        file_da = f"20{ant_dia}COVID19MEXICO.csv"
+        dt_da = ant_dia_ext
+
 
 def get_context(dt, file_name):
-
-    df = pd.read_csv("api_covid19/static/files/"+file_name)
+    update_dates()
+    df = pd.read_csv(files_path+file_name)
     rs = df.groupby("Estado")["Edad"].count().reset_index() \
                       .sort_values('Edad', ascending=False) \
                       .set_index('Estado')
@@ -81,6 +114,7 @@ def suspected(request):
 
 
 def index_prev(request):
+    update_dates()
     df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
@@ -131,7 +165,7 @@ def index_prev(request):
     return render(request, 'index.html', context=context)
 
 def deaths(request):
-
+    update_dates()
     conn = sqlite3.connect("covid19mx.db")
     cur = conn.cursor()
     # cur.execute("SELECT ENTIDAD_UM, count(*) as DEATHS FROM datos_abiertos_MX d " +
@@ -218,6 +252,9 @@ def deaths(request):
     return render(request, 'deaths.html', context=context)
 
 def index(request):
+    update_dates()
+    print("ECDC FILES ----------------")
+    print(ecdc_file)
     df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
@@ -230,7 +267,6 @@ def index(request):
     cases.reverse()
     deaths = df['deaths'].tolist()
     deaths.reverse()
-    v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
     cases_totals = []
     total = 0
     for i, v in enumerate(cases):
@@ -241,7 +277,6 @@ def index(request):
     for i, v in enumerate(deaths):
         total += v
         deaths_totals.append(total)
-    v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
 
     conn = sqlite3.connect("covid19mx.db")
     cur = conn.cursor()
@@ -274,15 +309,21 @@ def index(request):
         fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
     v_fechas2 = [{'name': 'Casos', 'data': v_fechas_confirmed,
                  'zoneAxis': 'x', 'zones': [{'value': 7}, {'dashStyle': 'dot', 'color': {
-    'linearGradient': { 'x1': .25, 'x2': 1, 'y1': 0, 'y2': 0},
-    'stops': [
-        [0, '#FFDD33'],
-        [1, 'white']
-    ]
-}}]}]
+                 'linearGradient': { 'x1': .25, 'x2': 1, 'y1': 0, 'y2': 0},
+                 'stops': [ [0, '#FFDD33'], [1, 'white'] ]
+                }}]}]
+
+    cases[len(cases)-1] = {"y": cases[len(cases)-1], "dataLabels":{"enabled":"true"}}
+    deaths[len(deaths)-1] = {"y": deaths[len(deaths)-1], "dataLabels":{"enabled":"true"}}
+    v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
+
+    cases_totals[len(cases_totals)-1] = {"y": cases_totals[len(cases_totals)-1], "dataLabels":{"enabled":"true"}}
+    deaths_totals[len(deaths_totals)-1] = {"y": deaths_totals[len(deaths_totals)-1], "dataLabels":{"enabled":"true"}}
+    v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
+
     context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
                'v_totals': v_totals,
-               'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': confirmed_date, 'dt_ecdc': ecdc_date}
+               'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': dt_da, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
 
 def last_origin(request):
