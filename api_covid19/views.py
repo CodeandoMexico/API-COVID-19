@@ -93,7 +93,7 @@ def get_context(dt, file_name):
     for i, v in enumerate(rango_de_edad):
         rango_de_edad[i] = str(rango_de_edad[i] * 10) + '-' + str((rango_de_edad[i] + 1) * 10)
 
-    context = {"estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
+    context = {'n_total': sum(values), "estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
     return context
 
@@ -248,7 +248,8 @@ def deaths(request):
         v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
     context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats, 'v_edad_genero': v_edad_genero,
-               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da}
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da,
+               'n_total': sum(values)}
     return render(request, 'deaths.html', context=context)
 
 def index(request):

@@ -42,7 +42,7 @@ input {
     border-radius: 3px;
 }
 .warning {
-    background-color: rgba(128, 0, 0, 0.15);
+    background-color: rgba(128, 90, 90, 0.05);
     padding: 10px;
     text-align: center;
     color: red;
