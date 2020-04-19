@@ -134,11 +134,12 @@ def run_prev():
     else:
         generateCSV(cc_filename)
         print(cc_filename + ".csv generado")
-    if os.path.exists(f'api_covid19/static/files/{sc_filename}.csv'):
-        print(sc_filename + ".csv ya existía")
-    else:
-        generateCSV(sc_filename)
-        print(sc_filename + ".csv generado")
+
+    # if os.path.exists(f'api_covid19/static/files/{sc_filename}.csv'):
+    #     print(sc_filename + ".csv ya existía")
+    # else:
+    #     generateCSV(sc_filename)
+    #     print(sc_filename + ".csv generado")
 
 def run():
     print("Iniciando")

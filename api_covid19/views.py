@@ -4,11 +4,13 @@ import json
 import datetime
 import sqlite3
 import os
+import datetime
 
 files_path = "api_covid19/static/files/"
-dia_ext = "17 de abril"
-dia_punto = "04.17"
-dia = "0417"
+today = datetime.date.today()
+dia_ext = today.strftime("%d") + " de abril"
+dia_punto = today.strftime("%m.%d")
+dia = today.strftime("%m%d")
 
 ecdc_date = ""
 ecdc_file = ""
@@ -21,9 +23,10 @@ dt_da = ""
 
 def update_dates():
     global ecdc_date, ecdc_file, confirmed_date, confirmed_file, suspected_date, suspected_file, file_da, dt_da
-    ant_dia_ext = "16 de abril"
-    ant_dia_punto = "04.16"
-    ant_dia = "0416"
+    yesterday = today - datetime.timedelta(days=1)
+    ant_dia_ext = yesterday.strftime("%d") + " de abril"
+    ant_dia_punto = yesterday.strftime("%m.%d")
+    ant_dia = yesterday.strftime("%m%d")
     if os.path.exists(files_path + f"ecdc_cases_2020.{dia_punto}.csv"):
         ecdc_date = dia_ext + " (ajustado)"
         ecdc_file = f"ecdc_cases_2020.{dia_punto}.csv"
