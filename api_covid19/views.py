@@ -51,7 +51,7 @@ def update_dates():
     else:
         file_da = f"20{ant_dia}COVID19MEXICO.csv"
         dt_da = ant_dia_ext
-
+    confirmed_date = ant_dia_ext
     confirmed_file = f"2020.04.18_confirmed_cases.csv"
 
 def get_context(dt, file_name):
