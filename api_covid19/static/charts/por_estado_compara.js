@@ -2,7 +2,7 @@ Highcharts.chart('container_compara', {
 chart: {
       type: 'column'
 },
-    colors: ['#E76C7C', '#C70039'],
+    colors: ['#E76C7C', '#C70039', '#FFDD33'],
     legend:{ enabled:true },
 title: {
       text:  _case_type + ' reportados por Estados vs SSA Datos Abiertos'

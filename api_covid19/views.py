@@ -52,6 +52,7 @@ def update_dates():
         file_da = f"20{ant_dia}COVID19MEXICO.csv"
         dt_da = ant_dia_ext
 
+    confirmed_file = f"2020.04.18_confirmed_cases.csv"
 
 def get_context(dt, file_name):
     update_dates()
@@ -73,12 +74,11 @@ def get_context(dt, file_name):
 
     edad_genero.append([0] * len(rango_de_edad))
     edad_genero.append([0] * len(rango_de_edad))
-    print(edad_genero)
 
     rs_edad_genero = df.groupby(["RangoDeEdad", "Sexo"])["N° Caso"].count()
     cur_rango = ''
     i_rango=-1
-    print(rs_edad_genero)
+
     for i, v in enumerate(rs_edad_genero):
         print(rs_edad_genero.index[i])
         if rs_edad_genero.index[i][0] != cur_rango:
@@ -86,12 +86,10 @@ def get_context(dt, file_name):
             i_rango=rango_de_edad.index(cur_rango)
         i_genero = (0 if rs_edad_genero.index[i][1] == "FEMENINO" else 1)
         edad_genero[i_genero][i_rango] = v
-    print(edad_genero)
 
     v_edad_genero = []
     v_edad_genero.append({'name': 'FEMENINO', 'data': edad_genero[0]})
     v_edad_genero.append({'name': 'MASCULINO', 'data': edad_genero[1]})
-    print(v_edad_genero)
 
     for i, v in enumerate(rango_de_edad):
         rango_de_edad[i] = str(rango_de_edad[i] * 10) + '-' + str((rango_de_edad[i] + 1) * 10)
@@ -250,20 +248,27 @@ def deaths(request):
     edos_compara = df['ENTIDAD_FEDERATIVA'].tolist()
     dece_compara = df['DECESOS'].tolist()
     abie_compara = []
+    difs_compara = []
     to_del = []
     for i, v in enumerate(edos_compara):
         if math.isnan(dece_compara[i]) or dece_compara[i] == "" or dece_compara[i] <= values[estados.index(v)]:
             dece_compara[i] = 0
             abie_compara.append(0)
+            difs_compara.append(0)
             to_del.append(i)
         else:
             abie_compara.append(values[estados.index(v)])
+            difs_compara.append(dece_compara[i] - values[estados.index(v)])
     to_del.reverse()
     for i in to_del:
         edos_compara.pop(i)
         dece_compara.pop(i)
         abie_compara.pop(i)
-    v_compara = [{'name': 'Datos de Estados', 'data': dece_compara}, {'name': 'SSA Datos Abiertos', 'data': abie_compara}]
+        difs_compara.pop(i)
+
+    v_compara = [{'name': 'Datos de Estados', 'data': dece_compara},
+                 {'name': 'SSA Datos Abiertos', 'data': abie_compara},
+                 {'name': 'Diferencia', 'data': difs_compara}]
     context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da,
                'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara}
