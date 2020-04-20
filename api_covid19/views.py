@@ -1,10 +1,10 @@
 from django.shortcuts import render
 import pandas as pd
 import json
-import datetime
 import sqlite3
 import os
 import datetime
+import math
 
 files_path = "api_covid19/static/files/"
 today = datetime.date.today()
@@ -235,10 +235,6 @@ def deaths(request):
         for i, v in enumerate(row):
             cats.append(col_names[i])
             v_cats.append(row[i])
-    print('***************')
-    print(cats)
-    print(v_cats)
-    print('***************')
 
     cur.close()
     conn.close()
@@ -250,16 +246,34 @@ def deaths(request):
     if sum(por_rango_sin) > 0:
         v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
+    df = pd.read_csv(files_path + "DATOS_Entidades_2020.04.19.csv", encoding = "latin")
+    edos_compara = df['ENTIDAD_FEDERATIVA'].tolist()
+    dece_compara = df['DECESOS'].tolist()
+    abie_compara = []
+    to_del = []
+    for i, v in enumerate(edos_compara):
+        if math.isnan(dece_compara[i]) or dece_compara[i] == "" or dece_compara[i] <= values[estados.index(v)]:
+            dece_compara[i] = 0
+            abie_compara.append(0)
+            to_del.append(i)
+        else:
+            abie_compara.append(values[estados.index(v)])
+    to_del.reverse()
+    for i in to_del:
+        edos_compara.pop(i)
+        dece_compara.pop(i)
+        abie_compara.pop(i)
+    v_compara = [{'name': 'Datos de Estados', 'data': dece_compara}, {'name': 'SSA Datos Abiertos', 'data': abie_compara}]
     context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da,
-               'n_total': sum(values)}
+               'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara}
     return render(request, 'deaths.html', context=context)
 
 def index(request):
     update_dates()
     print("ECDC FILES ----------------")
     print(ecdc_file)
-    df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
+    df = pd.read_csv(files_path + ecdc_file)
     df.dropna(subset=['countryterritoryCode'], inplace=True)
     df = df[df['countryterritoryCode'].str.contains("MEX")]
     df = df[df['cases'] > 0]

@@ -33,7 +33,6 @@ plotOptions: {
             dataLabels: {
                 enabled: true,
                 formatter: function(){
-                    console.log(this);
                     var val = this.y;
                     if (val < 6) {
                         return '';

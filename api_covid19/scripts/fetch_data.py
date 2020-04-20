@@ -174,12 +174,12 @@ def run():
         print("Datos Abiertos File = " + datos_abiertos)
         os.remove('api_covid19/' + to_path + da_filename)
 
-    import sqlite3
-    conn = sqlite3.connect("covid19mx.db")
-    df = pandas.read_csv(datos_abiertos, encoding = "latin")
-    df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
-    print("Datos Abiertos copiados a SQLLITE")
-    conn.close()
+        import sqlite3
+        conn = sqlite3.connect("covid19mx.db")
+        df = pandas.read_csv(datos_abiertos, encoding = "latin")
+        df.to_sql("datos_abiertos_MX", conn, if_exists='replace', index='id')
+        print("Datos Abiertos copiados a SQLLITE")
+        conn.close()
 
     run_prev()
 

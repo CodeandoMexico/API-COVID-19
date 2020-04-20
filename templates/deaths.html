@@ -23,6 +23,7 @@
       <div class="row">
                   <!-- Highcharts display -->
 	  <div class="col-md-6" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="col-md-6" id="container_compara" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="cont_cats" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
@@ -46,6 +47,9 @@ _v_cats = {{v_cats|safe}};
 _v_edad_genero = {{v_edad_genero|safe}};
 _rango_de_edad = {{rango_de_edad|safe}};
 _v_rango_de_edad = {{v_rango_de_edad|safe}};
+_edos_compara = {{edos_compara|safe}};
+_v_compara = {{v_compara|safe}};
+
 _dt = "{{dt|safe}}"
 _case_type = "DECESOS"
 _colors = ['#C70039']
@@ -57,6 +61,7 @@ _colors_genero_edad = ['#C70039', '#E74C3C']
     <script src="/static/scripts/main.js"></script>
 
     <script src="/static/charts/por_estado.js"></script>
+    <script src="/static/charts/por_estado_compara.js"></script>
     <script src="/static/charts/por_rango_de_edad.js"></script>
      <script src="/static/charts/por_cats.js" chart_title="Características de los DECESOS (no excluyentes)"
      chart_subtitle=" - Cada deceso puede estar en más de una columna"></script>
