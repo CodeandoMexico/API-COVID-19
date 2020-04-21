@@ -306,7 +306,7 @@ def deaths(request):
     if sum(por_rango_sin) > 0:
         v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
-    df = pd.read_csv(files_path + "DATOS_Entidades_2020.04.19.csv", encoding = "latin")
+    df = pd.read_csv(files_path + "DATOS_Entidades_2020.04.20.csv", encoding = "latin")
     edos_compara = df['ENTIDAD_FEDERATIVA'].tolist()
     dece_compara = df['DECESOS'].tolist()
     abie_compara = []
@@ -333,7 +333,7 @@ def deaths(request):
                  {'name': 'Diferencia', 'data': difs_compara}]
     context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da,
-               'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara}
+               'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara, 'n_sum_difs': round(sum(difs_compara))}
     return render(request, 'deaths.html', context=context)
 
 def index(request):
