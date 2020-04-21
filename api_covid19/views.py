@@ -99,8 +99,70 @@ def get_context(dt, file_name):
     return context
 
 
-def confirmed(request):
+def confirmed_ant(request):
     context = get_context(confirmed_date, confirmed_file)
+    return render(request, 'confirmed.html', context=context)
+
+def confirmed(request):
+    update_dates()
+    conn = sqlite3.connect("covid19mx.db")
+    cur = conn.cursor()
+    cur.execute("SELECT ENTIDAD_FEDERATIVA, count(*) as CONFIRMED FROM datos_abiertos_MX d " +
+                "JOIN Catalogo_Entidades e ON d.ENTIDAD_UM = e.CLAVE_ENTIDAD " +
+                "WHERE RESULTADO = 1 GROUP BY ENTIDAD_FEDERATIVA ORDER BY count(*) DESC")
+    estados = []
+    values = []
+    for row in cur:
+        estados.append(row[0])
+        values.append(row[1])
+
+    v_edad_genero = []
+    rango_de_edad = []
+    por_rango_fem = []
+    por_rango_mas = []
+    por_rango_sin = []
+    v_rango_de_edad = []
+
+    cur.execute("SELECT (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0' as RANGO_EDAD, c.DESCRIPCIÓN, count(*) as DEATHS "
+                "FROM datos_abiertos_MX d JOIN Catalogo_Sexo c ON d.SEXO = c.CLAVE "
+                "WHERE RESULTADO = 1 "
+                "GROUP BY (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0', SEXO ORDER BY EDAD/10 ")
+    cur_rango = ''
+    for row in cur:
+        if cur_rango != row[0]:
+            cur_rango = row[0]
+            if len(por_rango_fem) < len(rango_de_edad):
+                por_rango_fem.append(0)
+            if len(por_rango_mas) < len(rango_de_edad):
+                por_rango_mas.append(0)
+            if len(por_rango_sin) < len(rango_de_edad):
+                por_rango_sin.append(0)
+            rango_de_edad.append(row[0])
+        if row[1] == "MUJER":
+            por_rango_fem.append(row[2])
+        elif row[1] == "HOMBRE":
+            por_rango_mas.append(row[2])
+        else:
+            por_rango_sin.append(row[2])
+
+    if len(por_rango_fem) < len(rango_de_edad):
+        por_rango_fem.append(0)
+    if len(por_rango_mas) < len(rango_de_edad):
+        por_rango_mas.append(0)
+    if len(por_rango_sin) < len(rango_de_edad):
+        por_rango_sin.append(0)
+
+    for i, v in enumerate(rango_de_edad):
+        v_rango_de_edad.append(por_rango_fem[i] + por_rango_mas[i] + por_rango_sin[i])
+
+    v_edad_genero.append({'name': 'FEMENINO', 'data': por_rango_fem})
+    v_edad_genero.append({'name': 'MASCULINO', 'data': por_rango_mas})
+    if sum(por_rango_sin) > 0:
+        v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
+
+    context = {'n_total': sum(values), "estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_da, 'dt': dt_da}
+
     return render(request, 'confirmed.html', context=context)
 
 
@@ -193,7 +255,7 @@ def deaths(request):
     cur.execute("SELECT (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0' as RANGO_EDAD, c.DESCRIPCIÓN, count(*) as DEATHS "
                 "FROM datos_abiertos_MX d JOIN Catalogo_Sexo c ON d.SEXO = c.CLAVE "
                 "WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99' "
-                "GROUP BY (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0', SEXO ORDER BY RANGO_EDAD ")
+                "GROUP BY (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0', SEXO ORDER BY EDAD/10 ")
     cur_rango = ''
     for row in cur:
         if cur_rango != row[0]:
@@ -346,7 +408,7 @@ def index(request):
 
     context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
                'v_totals': v_totals,
-               'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': dt_da, 'dt_ecdc': ecdc_date}
+               'file_name': ecdc_file, 'file_name2': file_da, 'dt': dt_da, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)
 
 def last_origin(request):
