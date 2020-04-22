@@ -33,12 +33,6 @@ def update_dates():
     else:
         ecdc_date = ant_dia_ext + " (ajustado)"
         ecdc_file = f"ecdc_cases_2020.{ant_dia_punto}.csv"
-    if os.path.exists(files_path + f"2020.{dia_punto}_confirmed_cases.csv"):
-        confirmed_date = dia_ext
-        confirmed_file = f"2020.{dia_punto}_confirmed_cases.csv"
-    else:
-        confirmed_date = ant_dia_ext
-        confirmed_file = f"2020.{ant_dia_punto}_confirmed_cases.csv"
     if os.path.exists(files_path + f"2020.{dia_punto}_suspected_cases.csv"):
         suspected_date = dia_ext
         suspected_file = f"2020.{dia_punto}_suspected_cases.csv"
@@ -51,7 +45,7 @@ def update_dates():
     else:
         file_da = f"20{ant_dia}COVID19MEXICO.csv"
         dt_da = ant_dia_ext
-    confirmed_date = ant_dia_ext
+    confirmed_date = "18 de abril"
     confirmed_file = f"2020.04.18_confirmed_cases.csv"
 
 def get_context(dt, file_name):
@@ -306,7 +300,8 @@ def deaths(request):
     if sum(por_rango_sin) > 0:
         v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
-    df = pd.read_csv(files_path + "DATOS_Entidades_2020.04.20.csv", encoding = "latin")
+    dt_compara = '21 de abril'
+    df = pd.read_csv(files_path + "DATOS_Entidades_2020.04.21.csv", encoding = "latin")
     edos_compara = df['ENTIDAD_FEDERATIVA'].tolist()
     dece_compara = df['DECESOS'].tolist()
     abie_compara = []
@@ -333,7 +328,8 @@ def deaths(request):
                  {'name': 'Diferencia', 'data': difs_compara}]
     context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da,
-               'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara, 'n_sum_difs': round(sum(difs_compara))}
+               'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara, 'dt_compara': dt_compara,
+               'n_sum_difs': round(sum(difs_compara))}
     return render(request, 'deaths.html', context=context)
 
 def index(request):

@@ -1,0 +1,33 @@
+CLAVE_ENTIDAD,ENTIDAD_FEDERATIVA,ABREVIATURA,FECHA_ACT,DECESOS,CONFIRMADOS,SOSPECHOSOS,Notas
+1,AGUASCALIENTES,AS,21/04/20,4,105,55,
+2,BAJA CALIFORNIA,BC,21/04/20,83,786,619,
+3,BAJA CALIFORNIA SUR,BS,21/04/20,8,198,159,
+4,CAMPECHE,CC,,,,,
+5,COAHUILA,CL,21/04/20,24,277,,
+6,COLIMA,CM,20/04/20,2,14,24,
+7,CHIAPAS,CS,20/04/20,3,71,764,
+8,CHIHUAHUA,CH,21/04/20,38,177,220,http://www.cambio.gob.mx/spip.php?article15266 
+9,CIUDAD DE MÉXICO,DF,,,,,
+10,DURANGO,DG,20/04/20,4,29,53,
+11,GUANAJUATO,GT,21/04/20,10,181,188,
+12,GUERRERO,GR,20/04/20,14,129,85,
+13,HIDALGO,HG,21/04/20,15,92,54,http://coronavirus.hidalgo.gob.mx/ 
+14,JALISCO,JC,20/04/20,14,216,276,
+15,ESTADO DE MÉXICO,MC,21/04/20,58,901,2198,
+16,MICHOACÁN,MN,20/04/20,18,140,195,
+17,MORELOS,MS,19/04/20,12,89,83,
+18,NAYARIT,NT,21/04/20,9,48,7,
+19,NUEVO LEÓN,NL,20/04/20,7,283,810,
+20,OAXACA,OC,21/04/20,8,69,61,https://www.oaxaca.gob.mx/comunicacion/al-iniciar-la-fase-3-quedarse-en-casa-es-vital-para-frenar-al-covid-19-sso/ 
+21,PUEBLA,PL,20/04/20,70,382,,https://www.puebla.gob.mx/index.php/noticias/item/1553-con-reconversion-de-hospitales-puebla-inicio-la-fase-3-de-covid-19 
+22,QUERÉTARO,QT,21/04/20,6,88,,https://www.queretaro.gob.mx/covid19/ 
+23,QUINTANA ROO,QR,21/04/20,32,361,144,
+24,SAN LUIS POTOSÍ,SP,21/04/20,5,70,,
+25,SINALOA,SL,20/04/20,49,400,923,
+26,SONORA,SR,20/04/20,17,157,,https://www.sonora.gob.mx/coronavirus/inicio.html 
+27,TABASCO,TC,20/04/20,42,397,351,https://tabasco.gob.mx/noticias/reitera-salud-llamado-tabasquenos-quedarse-en-casa-para-prevenir-el-covid-19 
+28,TAMAULIPAS,TS,21/04/20,7,210,79,
+29,TLAXCALA,TL,,,,,
+30,VERACRUZ,VZ,20/04/20,12,156,550,
+31,YUCATÁN,YN,21/04/20,15,202,1702,https://www.facebook.com/gobierno.estado.yucatan/videos/935176540232926/?v=935176540232926 
+32,ZACATECAS,ZS,21/04/20,3,39,47,
