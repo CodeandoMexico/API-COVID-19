@@ -1,58 +1,6 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>COVID-19 en México por Codeando</title>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/codeando.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head>
-<body>
-
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-          <a class="navbar-brand" href="#" style="color: darkseagreen">COVID-19 en México por Codeando</a>
-
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-        <ul class="nav navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="/">Evolución</a>
-          </li>
-                      <li class="nav-item">
-            <a class="nav-link" href="deaths" style="color: #E6B5C3"><b>Decesos</b></a>
-          </li>
-
-          <li class="nav-item active">
-            <a class="nav-link" href="confirmed">Confirmados <span class="sr-only">(current)</span></a>
-          </li>
-<!--          <li class="nav-item">
-            <a class="nav-link" href="suspected">Sospechosos</a>
-          </li>-->
-          <li class="nav-item">
-            <a class="nav-link" href="last_origin">Procedencia</a>
-          </li>
-            <li class="nav-item">
-            <a class="nav-link" href="contact"><b>E-Mail</b></a>
-            </li>
-        </ul>
-    </div>
-  </div>
-</nav>
-
-<div class="container">
-
+{% extends "base.html" %}
+{% block title %}Info General{% endblock title %}
+{% block content %}
 
     <div class="container-fluid" style="display: block; margin-top: 0px">
 
@@ -65,15 +13,9 @@
           	  <!-- Highcharts display -->
 	  <div class="col-md-6" id="container" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_rango_de_edad" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="col-md-6" id="cont_cats" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
+	  <div class="col-md-6" id="cont_cats2" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
 	  <div class="col-md-6" id="container_edad_genero" style="min-width: 800px; height: 450px; margin: 0 auto"></div>
-
-<!--          <h2 class="pt-4">Section Details</h2>-->
-<!--
-	  <p class="text-danger">This table will be upated by Django objects, hence leaving it as it is.</p>
-	  <div class="table-responsive">
-	    {{table_data|safe}}
-	  </div>
--->
 
       </div>
     </div>
@@ -86,57 +28,31 @@
     <script>
 _estados = {{estados|safe}};
 _values = {{values|safe}};
+_cats = {{cats|safe}};
+_v_cats = {{v_cats|safe}};
+_cats2 = {{cats2|safe}};
+_v_cats2 = {{v_cats2|safe}};
 _v_edad_genero = {{v_edad_genero|safe}};
 _rango_de_edad = {{rango_de_edad|safe}};
 _v_rango_de_edad = {{v_rango_de_edad|safe}};
 _dt = "{{dt|safe}}"
 _case_type = "CONFIRMADOS"
 _colors = ['#FFDD33']
-_colors_rango_de_edad = ['#3B97B2', '#67BC42', '#FF56DE', '#E6D605', '#BC36FE']
+_colors_rango_de_edad = ['orange', '#67BC42', '#FF56DE', '#E6D605', '#BC36FE']
 _colors_genero_edad = ['#16A085', '#34495E']
 
     </script>
 
-
-        <footer>
-            <div class="container p-5">
-                <div class="text-center">
-                    <div class="row" style="text-align: center">
-                        <a class="navbar-brand scroll" href="https://www.codeandomexico.org/" >
-                            <img src="/static/img/codeandomexico.png" alt="CodeandoMexico" class="codeandomexico">
-                        </a>
-                    </div><br>
-
-                    <div class="row" >
-                        <p class="font-purple mt-5"><a href="contact">Mant&eacute;nte en Contacto</a></p>
-                    </div>
-                    <div class="row" >
-                        <a href="https://twitter.com/codeandomexico" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.facebook.com/CodeandoMexico/" target="_blank"><i class="fab fa-facebook"></i></a>
-                        <a href="https://medium.com/codeandomexico" target="_blank"><i class="fab fa-medium"></i></a>
-                        <a href="mailto:equipo@codeandomexico.org?Subject=Hello%20from%20webpage" target="_top"><i class="fas fa-envelope"></i></a>
-                        <a href="https://github.com/CodeandoMexico" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="http://slack.codeandomexico.org/" target="_blank"><i class="fab fa-slack"></i></a>
-                    </div>
-                    <div class="">
-                        <p class="mt-3">Derechos reservados 2018 &copy;</p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-
+    <script src="/static/scripts/main.js"></script>
     <script src="/static/charts/por_estado.js"></script>
     <script src="/static/charts/por_rango_de_edad.js"></script>
+     <script src="/static/charts/por_cats.js" chart_title="Características de casos CONFIRMADOS (no excluyentes)"
+     chart_subtitle=" - Cada caso puede estar en más de una columna"></script>
+     <script src="/static/charts/por_cats2.js" chart_title="Detalle de los {{n_criticos}} CONFIRMADOS en UCI o Intubados"
+     chart_subtitle=" - Cada caso puede estar en más de una columna"></script>
     <script src="/static/charts/por_edad_genero.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 
-
-
-</div>
-
-</body>
-</html>
-
+{% endblock content %}
 
 

@@ -11,18 +11,16 @@ today = datetime.date.today()
 dia_ext = today.strftime("%d") + " de abril"
 dia_punto = today.strftime("%m.%d")
 dia = today.strftime("%m%d")
+dt_compara = '22 de abril'
+compara_file = "DATOS_Entidades_2020.04.22.csv"
 
 ecdc_date = ""
 ecdc_file = ""
-confirmed_date = ""
-confirmed_file = ""
-suspected_date = ""
-suspected_file = ""
 file_da = ""
 dt_da = ""
 
 def update_dates():
-    global ecdc_date, ecdc_file, confirmed_date, confirmed_file, suspected_date, suspected_file, file_da, dt_da
+    global ecdc_date, ecdc_file, file_da, dt_da
     yesterday = today - datetime.timedelta(days=1)
     ant_dia_ext = yesterday.strftime("%d") + " de abril"
     ant_dia_punto = yesterday.strftime("%m.%d")
@@ -33,69 +31,12 @@ def update_dates():
     else:
         ecdc_date = ant_dia_ext + " (ajustado)"
         ecdc_file = f"ecdc_cases_2020.{ant_dia_punto}.csv"
-    if os.path.exists(files_path + f"2020.{dia_punto}_suspected_cases.csv"):
-        suspected_date = dia_ext
-        suspected_file = f"2020.{dia_punto}_suspected_cases.csv"
-    else:
-        suspected_date = ant_dia_ext
-        suspected_file = f"2020.{ant_dia_punto}_suspected_cases.csv"
     if os.path.exists(files_path + f"20{dia}COVID19MEXICO.csv"):
         file_da = f"20{dia}COVID19MEXICO.csv"
         dt_da = dia_ext
     else:
         file_da = f"20{ant_dia}COVID19MEXICO.csv"
         dt_da = ant_dia_ext
-    confirmed_date = "18 de abril"
-    confirmed_file = f"2020.04.18_confirmed_cases.csv"
-
-def get_context(dt, file_name):
-    update_dates()
-    df = pd.read_csv(files_path+file_name)
-    rs = df.groupby("Estado")["Edad"].count().reset_index() \
-                      .sort_values('Edad', ascending=False) \
-                      .set_index('Estado')
-    estados = list(rs.index)
-    values = list(rs.values)
-
-    df['RangoDeEdad'] = df.Edad // 10
-    rs = df.groupby("RangoDeEdad")["Edad"].count()
-    rango_de_edad = list(rs.index)
-    v_rango_de_edad = list(rs.values)
-
-    edad_genero = []
-    for i, v in enumerate(values):
-        values[i] = values[i][0]
-
-    edad_genero.append([0] * len(rango_de_edad))
-    edad_genero.append([0] * len(rango_de_edad))
-
-    rs_edad_genero = df.groupby(["RangoDeEdad", "Sexo"])["N° Caso"].count()
-    cur_rango = ''
-    i_rango=-1
-
-    for i, v in enumerate(rs_edad_genero):
-        print(rs_edad_genero.index[i])
-        if rs_edad_genero.index[i][0] != cur_rango:
-            cur_rango=rs_edad_genero.index[i][0]
-            i_rango=rango_de_edad.index(cur_rango)
-        i_genero = (0 if rs_edad_genero.index[i][1] == "FEMENINO" else 1)
-        edad_genero[i_genero][i_rango] = v
-
-    v_edad_genero = []
-    v_edad_genero.append({'name': 'FEMENINO', 'data': edad_genero[0]})
-    v_edad_genero.append({'name': 'MASCULINO', 'data': edad_genero[1]})
-
-    for i, v in enumerate(rango_de_edad):
-        rango_de_edad[i] = str(rango_de_edad[i] * 10) + '-' + str((rango_de_edad[i] + 1) * 10)
-
-    context = {'n_total': sum(values), "estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
-               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_name, 'dt': dt}
-    return context
-
-
-def confirmed_ant(request):
-    context = get_context(confirmed_date, confirmed_file)
-    return render(request, 'confirmed.html', context=context)
 
 def confirmed(request):
     update_dates()
@@ -116,6 +57,10 @@ def confirmed(request):
     por_rango_mas = []
     por_rango_sin = []
     v_rango_de_edad = []
+    cats = []
+    v_cats = []
+    cats2 = []
+    v_cats2 = []
 
     cur.execute("SELECT (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0' as RANGO_EDAD, c.DESCRIPCIÓN, count(*) as DEATHS "
                 "FROM datos_abiertos_MX d JOIN Catalogo_Sexo c ON d.SEXO = c.CLAVE "
@@ -154,72 +99,45 @@ def confirmed(request):
     if sum(por_rango_sin) > 0:
         v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
+    cur.execute("SELECT "
+                "COUNT(CASE WHEN EDAD >= 60 THEN 1 END) AS '>= 60 AÑOS', "
+                "COUNT(CASE WHEN HIPERTENSION = 1 THEN 1 END) AS HIPERTENSION, "
+                "COUNT(CASE WHEN OBESIDAD = 1 THEN 1 END) AS OBESIDAD, "
+                "COUNT(CASE WHEN DIABETES = 1 THEN 1 END) AS DIABETES, "
+                "COUNT(CASE WHEN TABAQUISMO = 1 THEN 1 END) AS TABAQUISMO, "
+                "COUNT(CASE WHEN EMBARAZO = 1 THEN 1 END) AS EMBARAZO, "
+                "COUNT(CASE WHEN INTUBADO = 1 THEN 1 END) AS INTUBADO, "
+                "COUNT(CASE WHEN UCI = 1 THEN 1 END) AS 'EN UCI', "
+                "COUNT(CASE WHEN INTUBADO = 1 OR UCI = 1 THEN 1 END) AS 'INTUBADO O UCI' "
+                "FROM datos_abiertos_MX WHERE RESULTADO = 1 ")
+    col_names = list(map(lambda x: x[0], cur.description))
+    for row in cur:
+        for i, v in enumerate(row):
+            cats.append(col_names[i])
+            v_cats.append(row[i])
+
+    n_criticos = v_cats[len(v_cats)-1]
+
+    cur.execute("SELECT "
+                "COUNT(CASE WHEN EDAD >= 60 THEN 1 END) AS '>= 60 AÑOS', "
+                "COUNT(CASE WHEN HIPERTENSION = 1 THEN 1 END) AS HIPERTENSION, "
+                "COUNT(CASE WHEN OBESIDAD = 1 THEN 1 END) AS OBESIDAD, "
+                "COUNT(CASE WHEN DIABETES = 1 THEN 1 END) AS DIABETES, "
+                "COUNT(CASE WHEN TABAQUISMO = 1 THEN 1 END) AS TABAQUISMO, "
+                "COUNT(CASE WHEN EMBARAZO = 1 THEN 1 END) AS EMBARAZO "
+                "FROM datos_abiertos_MX WHERE RESULTADO = 1 AND (INTUBADO = 1 OR UCI = 1)")
+    col_names = list(map(lambda x: x[0], cur.description))
+    for row in cur:
+        for i, v in enumerate(row):
+            cats2.append(col_names[i])
+            v_cats2.append(row[i])
+    cur.close()
+    conn.close()
     context = {'n_total': sum(values), "estados": estados, 'values': values, 'v_edad_genero': v_edad_genero,
-               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_da, 'dt': dt_da}
+               'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_name': file_da, 'dt': dt_da,
+               "cats": cats, 'v_cats': v_cats, "cats2": cats2, 'v_cats2': v_cats2, 'n_criticos': n_criticos}
 
     return render(request, 'confirmed.html', context=context)
-
-
-def suspected(request):
-    context = get_context(suspected_date, suspected_file)
-    #    table_content = df.to_html(index=None)
-    #    table_content = table_content.replace("", "")
-    #    table_content = table_content.replace('class="dataframe"', "class='table table-striped'")
-    #    table_content = table_content.replace('border="1"', "")
-    # 'table_data': table_content
-    return render(request, 'suspected.html', context=context)
-
-
-def index_prev(request):
-    update_dates()
-    df = pd.read_csv("api_covid19/static/files/" + ecdc_file)
-    df.dropna(subset=['countryterritoryCode'], inplace=True)
-    df = df[df['countryterritoryCode'].str.contains("MEX")]
-    df = df[df['cases'] > 0]
-    df['dateRep'] = pd.to_datetime(df['dateRep'], format='%d/%m/%Y')
-    df['dateRep'] = df['dateRep']  + datetime.timedelta(days=-1)
-    fechas = df['dateRep'].tolist()
-    for i, v in enumerate(fechas):
-        fechas[i] = fechas[i].strftime("%Y/%m/%d")
-    fechas.reverse()
-    cases = df['cases'].tolist()
-    cases.reverse()
-    deaths = df['deaths'].tolist()
-    deaths.reverse()
-    v_fechas = [{'name': 'Confirmados', 'data': cases}, {'name': 'Decesos', 'data': deaths}]
-    cases_totals = []
-    total = 0
-    for i, v in enumerate(cases):
-        total += v
-        cases_totals.append(total)
-    deaths_totals = []
-    total = 0
-    for i, v in enumerate(deaths):
-        total += v
-        deaths_totals.append(total)
-    v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
-
-    df = pd.read_csv("api_covid19/static/files/"+confirmed_file)
-    for i, v in enumerate(df.columns):
-        df.rename(columns={v: v.replace("\n", "")}, inplace=True)
-    df['Fecha de Inicio de síntomas'] = pd.to_datetime(df['Fecha de Inicio de síntomas'], format='%d/%m/%Y')
-    rs = df.groupby("Fecha de Inicio de síntomas")["N° Caso"].count()
-    fechas_confirmed = list(rs.index)
-    v_fechas_confirmed = list(rs.values)
-    for i, v in enumerate(fechas_confirmed):
-        fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
-    v_fechas2 = [{'name': 'Casos', 'data': v_fechas_confirmed,
-                 'zoneAxis': 'x', 'zones': [{'value': 7}, {'dashStyle': 'dot', 'color': {
-    'linearGradient': { 'x1': .25, 'x2': 1, 'y1': 0, 'y2': 0},
-    'stops': [
-        [0, '#FFDD33'],
-        [1, 'white']
-    ]
-}}]}]
-    context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
-               'v_totals': v_totals,
-               'file_name': ecdc_file, 'file_name2': confirmed_file, 'dt': confirmed_date, 'dt_ecdc': ecdc_date}
-    return render(request, 'index.html', context=context)
 
 def deaths(request):
     update_dates()
@@ -245,6 +163,8 @@ def deaths(request):
     v_rango_de_edad = []
     cats = []
     v_cats = []
+    cats2 = []
+    v_cats2 = []
 
     cur.execute("SELECT (EDAD/10) || '0 - ' || (EDAD/10 + 1) || '0' as RANGO_EDAD, c.DESCRIPCIÓN, count(*) as DEATHS "
                 "FROM datos_abiertos_MX d JOIN Catalogo_Sexo c ON d.SEXO = c.CLAVE "
@@ -290,6 +210,21 @@ def deaths(request):
             cats.append(col_names[i])
             v_cats.append(row[i])
 
+    cur.execute("SELECT "
+                "COUNT(CASE WHEN EDAD >= 60 THEN 1 END) AS '>= 60 AÑOS', "
+                "COUNT(CASE WHEN HIPERTENSION = 1 THEN 1 END) AS HIPERTENSION, "
+                "COUNT(CASE WHEN OBESIDAD = 1 THEN 1 END) AS OBESIDAD, "
+                "COUNT(CASE WHEN DIABETES = 1 THEN 1 END) AS DIABETES, "
+                "COUNT(CASE WHEN INTUBADO = 1 THEN 1 END) AS INTUBADO, "
+                "COUNT(CASE WHEN TABAQUISMO = 1 THEN 1 END) AS TABAQUISMO, "
+                "COUNT(CASE WHEN EMBARAZO = 1 THEN 1 END) AS EMBARAZO "
+                "FROM datos_abiertos_MX WHERE RESULTADO = 1 AND FECHA_DEF <> '9999-99-99' AND INTUBADO = 1 OR UCI = 1 ")
+    col_names = list(map(lambda x: x[0], cur.description))
+    for row in cur:
+        for i, v in enumerate(row):
+            cats2.append(col_names[i])
+            v_cats2.append(row[i])
+
     cur.close()
     conn.close()
     for i, v in enumerate(rango_de_edad):
@@ -300,8 +235,7 @@ def deaths(request):
     if sum(por_rango_sin) > 0:
         v_edad_genero.append({'name': 'NO DEFINIDO', 'data': por_rango_sin})
 
-    dt_compara = '21 de abril'
-    df = pd.read_csv(files_path + "DATOS_Entidades_2020.04.21.csv", encoding = "latin")
+    df = pd.read_csv(files_path + compara_file, encoding = "latin")
     edos_compara = df['ENTIDAD_FEDERATIVA'].tolist()
     dece_compara = df['DECESOS'].tolist()
     abie_compara = []
@@ -326,7 +260,8 @@ def deaths(request):
     v_compara = [{'name': 'Datos de Estados', 'data': dece_compara},
                  {'name': 'SSA Datos Abiertos', 'data': abie_compara},
                  {'name': 'Diferencia', 'data': difs_compara}]
-    context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats, 'v_edad_genero': v_edad_genero,
+    context = {"estados": estados, 'values': values, "cats": cats, 'v_cats': v_cats,
+               "cats2": cats2, 'v_cats2': v_cats2, 'v_edad_genero': v_edad_genero,
                'rango_de_edad': rango_de_edad, 'v_rango_de_edad' : v_rango_de_edad, 'file_da': file_da, 'dt': dt_da,
                'n_total': sum(values), 'edos_compara': edos_compara, 'v_compara': v_compara, 'dt_compara': dt_compara,
                'n_sum_difs': round(sum(difs_compara))}
@@ -379,20 +314,21 @@ def index(request):
 
     for i, v in enumerate(fechas):
         fechas[i] = fechas[i].strftime("%Y/%m/%d")
-    df = pd.read_csv("api_covid19/static/files/"+confirmed_file)
-    for i, v in enumerate(df.columns):
-        df.rename(columns={v: v.replace("\n", "")}, inplace=True)
-    df['Fecha de Inicio de síntomas'] = pd.to_datetime(df['Fecha de Inicio de síntomas'], format='%d/%m/%Y')
-    rs = df.groupby("Fecha de Inicio de síntomas")["N° Caso"].count()
-    fechas_confirmed = list(rs.index)
-    v_fechas_confirmed = list(rs.values)
-    for i, v in enumerate(fechas_confirmed):
-        fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
-    v_fechas2 = [{'name': 'Casos', 'data': v_fechas_confirmed,
-                 'zoneAxis': 'x', 'zones': [{'value': 7}, {'dashStyle': 'dot', 'color': {
-                 'linearGradient': { 'x1': .25, 'x2': 1, 'y1': 0, 'y2': 0},
-                 'stops': [ [0, '#FFDD33'], [1, 'white'] ]
-                }}]}]
+    #
+    # df = pd.read_csv("api_covid19/static/files/"+confirmed_file)
+    # for i, v in enumerate(df.columns):
+    #     df.rename(columns={v: v.replace("\n", "")}, inplace=True)
+    # df['Fecha de Inicio de síntomas'] = pd.to_datetime(df['Fecha de Inicio de síntomas'], format='%d/%m/%Y')
+    # rs = df.groupby("Fecha de Inicio de síntomas")["N° Caso"].count()
+    # fechas_confirmed = list(rs.index)
+    # v_fechas_confirmed = list(rs.values)
+    # for i, v in enumerate(fechas_confirmed):
+    #     fechas_confirmed[i] = fechas_confirmed[i].strftime("%Y/%m/%d")
+    # v_fechas2 = [{'name': 'Casos', 'data': v_fechas_confirmed,
+    #              'zoneAxis': 'x', 'zones': [{'value': 7}, {'dashStyle': 'dot', 'color': {
+    #              'linearGradient': { 'x1': .25, 'x2': 1, 'y1': 0, 'y2': 0},
+    #              'stops': [ [0, '#FFDD33'], [1, 'white'] ]
+    #             }}]}]
 
     cases[len(cases)-1] = {"y": cases[len(cases)-1], "dataLabels":{"enabled":"true"}}
     deaths[len(deaths)-1] = {"y": deaths[len(deaths)-1], "dataLabels":{"enabled":"true"}}
@@ -402,7 +338,7 @@ def index(request):
     deaths_totals[len(deaths_totals)-1] = {"y": deaths_totals[len(deaths_totals)-1], "dataLabels":{"enabled":"true"}}
     v_totals = [{'name': 'Confirmados', 'data': cases_totals}, {'name': 'Decesos', 'data': deaths_totals}]
 
-    context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': fechas_confirmed, 'v_fechas2': v_fechas2,
+    context = {'fechas': fechas, 'v_fechas': v_fechas, 'fechas2': [], 'v_fechas2': [],
                'v_totals': v_totals,
                'file_name': ecdc_file, 'file_name2': file_da, 'dt': dt_da, 'dt_ecdc': ecdc_date}
     return render(request, 'index.html', context=context)

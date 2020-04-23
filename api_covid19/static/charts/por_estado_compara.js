@@ -5,7 +5,7 @@ chart: {
     colors: ['#E76C7C', '#C70039', '#FFDD33'],
     legend:{ enabled:true },
 title: {
-      text:  _case_type + ' reportados por Estados (al ' + _dt_compara + ') vs SSA Datos Abiertos'
+      text: 'Estados que reportan más ' + _case_type + ' (al ' + _dt_compara + ') vs SSA Datos Abiertos'
 },
 subtitle: {
       text: _dt + ' - puede reflejar diferentes horarios de corte'
