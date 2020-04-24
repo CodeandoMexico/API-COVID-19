@@ -11,8 +11,8 @@ today = datetime.date.today()
 dia_ext = today.strftime("%d") + " de abril"
 dia_punto = today.strftime("%m.%d")
 dia = today.strftime("%m%d")
-dt_compara = '22 de abril'
-compara_file = "DATOS_Entidades_2020.04.22.csv"
+dt_compara = '23 de abril'
+compara_file = "DATOS_Entidades_2020.04.23.csv"
 
 ecdc_date = ""
 ecdc_file = ""
